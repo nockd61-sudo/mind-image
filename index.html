@@ -94,7 +94,7 @@
   overflow: hidden;
 }
 
- .choice-card img {
+.choice-card img {
   width: auto;
   height: auto;
   max-width: 72%;
@@ -112,6 +112,15 @@
     drop-shadow(0 0 0.8px rgba(20,15,34,0.95))
     drop-shadow(0 0 0.8px rgba(20,15,34,0.95))
     drop-shadow(0 1px 1px rgba(255,255,255,0.9));
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ✅ 구름만 검정 라인 */
+img[src*="cloud"]{
+  filter: brightness(0) contrast(1.4);
+}
+  filter: brightness(0) contrast(1.4);
 }
   transform: translateZ(0);
   backface-visibility: hidden;
