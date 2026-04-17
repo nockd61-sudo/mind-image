@@ -6,6 +6,7 @@
   <title>Mind Image Choice</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: "Pretendard", "Noto Sans KR", sans-serif;
@@ -94,7 +95,7 @@
       margin-top: 28px;
       flex-wrap: wrap;
     }
-ㅋ
+
     .btn {
       border: none;
       border-radius: 999px;
@@ -127,7 +128,6 @@
       font-size: 14px;
     }
 
-    /* modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -287,9 +287,9 @@
 
     .result-lines {
       display: grid;
-      gap: 10px;
+      gap: 14px;
       color: #5a5567;
-      line-height: 1.8;
+      line-height: 1.85;
       font-size: 16px;
       white-space: pre-line;
     }
@@ -356,10 +356,6 @@
     <h1 class="page-title">내 마음 그림 조합은 어떤 기운일까요?</h1>
     <p class="page-sub">그림 2~3개를 선택하면, 조합된 상징 이미지와 더 길어진 해설을 볼 수 있습니다.</p>
 
-    <!--
-      아래 카드의 img src만 세웅님 현재 사이트에서 쓰는 실제 이미지 경로로 바꿔주시면 됩니다.
-      data-* 값은 해설을 길게 만드는 데 사용됩니다.
-    -->
     <div class="choice-grid" id="choiceGrid">
       <div class="choice-card"
            data-name="조용한 달"
@@ -368,7 +364,7 @@
            data-energy="조용하지만 깊은 집중력"
            data-message="마음을 가라앉히고 생각을 정리하게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f319.png" alt="조용한 달">
+        <img src="images/moon.png" alt="조용한 달">
         <div class="choice-title">조용한 달</div>
         <div class="choice-desc">혼자만의 정리와 사색의 기운</div>
       </div>
@@ -380,7 +376,7 @@
            data-energy="작지만 분명한 빛"
            data-message="희망과 기대를 놓지 않게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2b50.png" alt="별빛">
+        <img src="images/star.png" alt="별빛">
         <div class="choice-title">별빛</div>
         <div class="choice-desc">희망과 회복을 비추는 기운</div>
       </div>
@@ -392,7 +388,7 @@
            data-energy="따뜻하고 전진하는 에너지"
            data-message="멈춰 있던 감정을 다시 움직이게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f525.png" alt="불빛">
+        <img src="images/fire.png" alt="불빛">
         <div class="choice-title">불빛</div>
         <div class="choice-desc">에너지를 깨우는 전진의 기운</div>
       </div>
@@ -404,7 +400,8 @@
            data-energy="부드럽고 이동하는 감정"
            data-message="고정되지 않고 변화 속에서 의미를 찾게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png" alt="구름">
+        <img src="images/cloud.png" alt="구름"
+             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png'">
         <div class="choice-title">구름</div>
         <div class="choice-desc">변화와 감정 흐름의 상징</div>
       </div>
@@ -416,7 +413,8 @@
            data-energy="넓고 포용적인 정서"
            data-message="겉보다 더 깊은 감정의 결을 들여다보게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png" alt="바다">
+        <img src="images/ocean.png" alt="바다"
+             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png'">
         <div class="choice-title">바다</div>
         <div class="choice-desc">깊고 넓은 감정의 에너지</div>
       </div>
@@ -428,7 +426,8 @@
            data-energy="부드럽게 커지는 생명력"
            data-message="회복과 성장의 가능성을 보여주는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png" alt="잎새">
+        <img src="images/leaf.png" alt="잎새"
+             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png'">
         <div class="choice-title">잎새</div>
         <div class="choice-desc">자라남과 회복의 상징</div>
       </div>
@@ -440,7 +439,8 @@
            data-energy="예민하지만 아름다운 빛"
            data-message="감성과 관계의 온기를 품는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png" alt="꽃별">
+        <img src="images/flower.png" alt="꽃별"
+             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png'">
         <div class="choice-title">꽃별</div>
         <div class="choice-desc">감성과 따뜻함의 기운</div>
       </div>
@@ -452,7 +452,8 @@
            data-energy="또렷하고 환한 기운"
            data-message="정체된 상태에서 중심을 다시 잡게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png" alt="해">
+        <img src="images/sun.png" alt="해"
+             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png'">
         <div class="choice-title">해</div>
         <div class="choice-desc">밝음과 중심의 에너지</div>
       </div>
@@ -466,21 +467,18 @@
     </div>
   </div>
 
-  <!-- 해설 모달 -->
   <div class="modal-backdrop" id="explainModal">
     <div class="modal">
       <button class="modal-close" onclick="closeExplainModal()">×</button>
 
       <h2 class="modal-title">그림 조합 해설</h2>
       <div class="modal-sub">
-        선택한 그림의 분위기를 함께 읽어낸 결과입니다.  
-        이번 버전은 텍스트 대신 실제 선택 이미지를 보여주고, 2~3개 조합 시 하나의 통합 이미지로 해석해줍니다.
+        선택한 그림의 분위기를 함께 읽어낸 결과입니다.
+        선택 이미지는 그대로 보여주고, 조합 해설은 더 길고 자연스럽게 읽히도록 다듬었습니다.
       </div>
 
-      <!-- 선택 이미지 썸네일 -->
       <div class="picked-images" id="pickedImages"></div>
 
-      <!-- 통합 이미지 -->
       <div class="fusion-box">
         <div class="fusion-title">조합된 상징 이미지</div>
         <div class="fusion-inner">
@@ -496,7 +494,6 @@
         </div>
       </div>
 
-      <!-- 긴 해설 -->
       <div class="result-box">
         <div class="result-title">해설 결과</div>
         <div class="result-lines" id="longExplainText"></div>
@@ -603,7 +600,7 @@
 
       const explainBox = document.getElementById("longExplainText");
       explainBox.innerHTML = longExplain
-        .split("\n")
+        .split("\n\n")
         .map(line => `<div>${line}</div>`)
         .join("");
 
@@ -613,27 +610,34 @@
 
     function makeFusionName(items) {
       const names = items.map(item => item.name);
+      const sortedKey = [...names].sort().join("|");
 
       const specialMap = {
-        "조용한 달|별빛": "달빛 길잡이형",
-        "조용한 달|불빛": "고요한 불씨형",
-        "조용한 달|별빛|불빛": "별불 달등형",
-        "별빛|불빛": "빛의 추진자형",
-        "구름|별빛": "흐르는 별구름형",
-        "바다|달": "밤바다 파동형",
-        "바다|별빛": "별을 품은 파도형",
+        "별빛|조용한 달": "조용한 달·별빛 조합형",
+        "불빛|조용한 달": "조용한 달·불빛 조합형",
+        "별빛|불빛": "별빛·불빛 조합형",
+        "구름|별빛": "구름·별빛 흐름형",
+        "구름|불빛": "구름·불빛 전환형",
+        "구름|조용한 달": "구름·조용한 달 사색형",
+        "바다|조용한 달": "밤바다 달빛형",
+        "바다|별빛": "별을 품은 바다형",
+        "바다|불빛": "깊은 파도 불빛형",
         "잎새|꽃별": "자라나는 정원형",
-        "해|불빛": "두 겹의 태양형"
+        "불빛|해": "두 겹의 태양형",
+        "별빛|불빛|조용한 달": "별빛 달불 조합형",
+        "구름|별빛|조용한 달": "흐르는 별달 구름형",
+        "바다|별빛|조용한 달": "밤바다 별빛 조합형",
+        "별빛|해": "햇살 별빛형",
+        "꽃별|별빛": "꽃피는 별빛형",
+        "구름|해": "구름 사이 햇살형"
       };
 
-      const sortedKey = [...names].sort().join("|");
       if (specialMap[sortedKey]) return specialMap[sortedKey];
 
-      const front = names[0] || "마음";
-      const back = names[names.length - 1] || "상징";
-
-      if (items.length === 2) return `${front}·${back} 조합형`;
-      return `${front} ${back} 통합형`;
+      if (items.length === 2) {
+        return `${names[0]}·${names[1]} 조합형`;
+      }
+      return `${names[0]}·${names[1]}·${names[2]} 통합형`;
     }
 
     function makeFusionDesc(items) {
@@ -644,19 +648,24 @@
     }
 
     function makeLongExplain(items, fusionName) {
-      const names = items.map(item => item.name).join(", ");
+      const names = items.map(item => item.name);
+      const joined = names.join(", ");
       const moods = items.map(item => item.mood).filter(Boolean);
       const energies = items.map(item => item.energy).filter(Boolean);
       const messages = items.map(item => item.message).filter(Boolean);
-      const allKeywords = [...new Set(items.flatMap(item => item.keywords))];
+      const keywords = [...new Set(items.flatMap(item => item.keywords))];
 
-      const line1 = `• <b>선택한 그림</b> : ${names}`;
-      const line2 = `• <b>${fusionName}</b>은(는) ${allKeywords.slice(0, 3).join(", ")}의 기운이 동시에 살아 있는 조합으로 볼 수 있습니다. 서로 다른 상징이지만 지금의 마음 안에서는 하나의 흐름으로 연결되고 있습니다.`;
-      const line3 = `• 이 조합에는 ${moods[0] || "내면을 바라보는 힘"}과 ${moods[1] || "감정을 정리하는 힘"}이 함께 담겨 있어, 감정이 단순하지 않고 여러 층위로 움직이고 있을 가능성을 보여줍니다.`;
-      const line4 = `• 또한 ${energies[0] || "조용한 집중력"}과 ${energies[1] || "회복의 기운"}이 겹치면서, 겉으로는 차분해 보여도 안쪽에서는 다시 앞으로 나아가려는 의지와 생기가 살아 있을 수 있습니다.`;
-      const line5 = `• 지금의 마음은 ${messages[0] || "정리"}와 ${messages[1] || "희망"} 그리고 ${messages[2] || "전진"} 사이를 오가며, 스스로를 다시 이해하고 다음 방향을 준비하는 과정에 가까워 보입니다. 너무 한 가지 감정으로 단정하기보다, 이 복합적인 상태 자체를 자연스럽게 받아들이는 것이 더 중요할 수 있습니다.`;
+      const line1 = `• <b>선택한 그림</b> : ${joined}`;
 
-      return [line1, line2, line3, line4, line5].join("\n");
+      const line2 = `• <b>${fusionName}</b>은(는) ${keywords.slice(0, 3).join(", ")}의 기운이 동시에 살아 있는 조합으로 볼 수 있습니다. 서로 다른 상징이지만 지금의 마음 안에서는 하나의 흐름으로 연결되고 있습니다.`;
+
+      const line3 = `• 이 조합에는 ${moods[0] || "내면을 천천히 바라보는 힘"}${moods[1] ? `과 ${moods[1]}` : ""}${moods[2] ? `, 그리고 ${moods[2]}` : ""}이 함께 담겨 있어, 감정이 단순하지 않고 여러 층위로 움직이고 있을 가능성을 보여줍니다.`;
+
+      const line4 = `• 또한 ${energies[0] || "조용한 집중력"}${energies[1] ? `과 ${energies[1]}` : ""}${energies[2] ? `, 그리고 ${energies[2]}` : ""}이 겹치면서, 겉으로는 차분해 보여도 안쪽에서는 다시 앞으로 나아가려는 의지와 생기가 살아 있을 수 있습니다.`;
+
+      const line5 = `• 지금의 마음은 ${messages[0] || "정리"}${messages[1] ? `와 ${messages[1]}` : ""}${messages[2] ? ` 그리고 ${messages[2]}` : ""} 사이를 오가며, 스스로를 다시 이해하고 다음 방향을 준비하는 과정에 가까워 보입니다. 너무 한 가지 감정으로 단정하기보다, 이 복합적인 상태 자체를 자연스럽게 받아들이는 것이 더 중요할 수 있습니다.`;
+
+      return [line1, line2, line3, line4, line5].join("\n\n");
     }
 
     async function createFusionImage(items) {
@@ -666,7 +675,6 @@
       canvas.height = size;
       const ctx = canvas.getContext("2d");
 
-      // 배경
       const bg = ctx.createRadialGradient(size * 0.3, size * 0.25, 20, size * 0.5, size * 0.5, size * 0.75);
       bg.addColorStop(0, "#ffffff");
       bg.addColorStop(0.45, "#f3eafd");
@@ -674,7 +682,6 @@
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, size, size);
 
-      // 부드러운 광원
       for (let i = 0; i < 6; i++) {
         ctx.beginPath();
         ctx.fillStyle = `rgba(255,255,255,${0.12 + i * 0.03})`;
@@ -702,7 +709,6 @@
               { x: 500, y: 470, r: 110 }
             ];
 
-      // 연결 라인
       ctx.save();
       ctx.strokeStyle = "rgba(168, 123, 234, 0.35)";
       ctx.lineWidth = 10;
@@ -720,7 +726,6 @@
       }
       ctx.restore();
 
-      // 중앙 빛
       const centerGlow = ctx.createRadialGradient(360, 360, 20, 360, 360, 180);
       centerGlow.addColorStop(0, "rgba(255,255,255,0.95)");
       centerGlow.addColorStop(0.3, "rgba(255,243,200,0.35)");
@@ -730,7 +735,6 @@
       ctx.arc(360, 360, 180, 0, Math.PI * 2);
       ctx.fill();
 
-      // 원형 이미지 배치
       images.forEach((img, index) => {
         const pos = positions[index];
 
@@ -760,7 +764,6 @@
         ctx.restore();
       });
 
-      // 중앙 별표 느낌
       ctx.save();
       ctx.fillStyle = "rgba(255, 232, 121, 0.95)";
       drawStar(ctx, 360, 360, 5, 34, 16);
