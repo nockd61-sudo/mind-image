@@ -522,7 +522,11 @@ html = r'''<!DOCTYPE html>
 
       <div class="modal-actions">
         <button class="btn btn-primary" onclick="saveResult()">해설 저장</button>
-        <button class="btn btn-soft" onclick="shareResult()">공유하기</button>
+       <button class="btn btn-soft" onclick="shareKakao(
+  currentResult.title,
+  currentResult.desc,
+  currentResult.image
+)">공유하기</button>
       </div>
     </div>
   </div>
@@ -913,10 +917,33 @@ html = r'''<!DOCTYPE html>
       const modal = document.getElementById("explainModal");
       if (e.target === modal) closeExplainModal();
     });
+    <script>
+function shareKakao(title, description, imageUrl) {
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: title,
+      description: description,
+      imageUrl: imageUrl,
+      link: {
+        mobileWebUrl: window.location.href,
+        webUrl: window.location.href,
+      },
+    },
+    buttons: [
+      {
+        title: '결과 보러가기',
+        link: {
+          mobileWebUrl: window.location.href,
+          webUrl: window.location.href,
+        },
+      },
+    ],
+  });
+}
+
   </script>
 </body>
 </html>
-'''
-path = Path('/mnt/data/index_expanded_animals_sharp.html')
-path.write_text(html, encoding='utf-8')
-print(path)
+
+
