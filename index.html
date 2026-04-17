@@ -1,15 +1,110 @@
-<!-- ✅ 카카오 SDK -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마음 그림 테스트</title>
+
+<!-- 카카오 SDK -->
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
+<style>
+body{
+  font-family: sans-serif;
+  background:#f7f3ff;
+  text-align:center;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  max-width:600px;
+  margin:40px auto;
+}
+
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:14px;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+
+.card.selected{
+  border:2px solid #7c4dff;
+}
+
+.card img{
+  width:70px;
+  height:70px;
+}
+
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  border:none;
+  border-radius:20px;
+  background:#7c4dff;
+  color:#fff;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h2>마음 그림 선택</h2>
+
+<div class="grid">
+
+<div class="card" onclick="selectItem('달','차분한 감정','moon.png')">
+<img src="images/moon.png"><br>달
+</div>
+
+<div class="card" onclick="selectItem('별','희망의 기운','star.png')">
+<img src="images/star.png"><br>별
+</div>
+
+<div class="card" onclick="selectItem('불','에너지','fire.png')">
+<img src="images/fire.png"><br>불
+</div>
+
+</div>
+
+<button onclick="showResult()">결과보기</button>
+
+<div id="resultBox"></div>
+
+<button onclick="shareResult()">공유하기</button>
+
 <script>
+
 Kakao.init('64849970060a38276a713204e56a7652');
 
-let currentResult = {
-  title: "마음 결과",
-  desc: "결과 설명",
-  image: "https://mind-image.nockd61.workers.dev/images/fire.png"
-};
+let selected = [];
+let currentResult = {};
 
+function selectItem(name, desc, img){
+  selected.push({name,desc,img});
+}
+
+function showResult(){
+
+  let names = selected.map(i=>i.name).join(" + ");
+  let desc = selected.map(i=>i.desc).join(", ");
+
+  currentResult = {
+    title: names,
+    desc: desc,
+    image: "https://mind-image.nockd61.workers.dev/images/fire.png"
+  };
+
+  document.getElementById("resultBox").innerHTML =
+    "<h3>"+names+"</h3><p>"+desc+"</p>";
+}
+
+/* 카카오 공유 */
 function shareKakao(title, description, imageUrl) {
   Kakao.Share.sendDefault({
     objectType: 'feed',
@@ -34,11 +129,15 @@ function shareKakao(title, description, imageUrl) {
   });
 }
 
-function shareResult() {
+function shareResult(){
   shareKakao(
     currentResult.title,
     currentResult.desc,
     currentResult.image
   );
 }
+
 </script>
+
+</body>
+</html>
