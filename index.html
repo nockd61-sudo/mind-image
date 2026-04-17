@@ -400,8 +400,7 @@
            data-energy="부드럽고 이동하는 감정"
            data-message="고정되지 않고 변화 속에서 의미를 찾게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="images/cloud.png" alt="구름"
-             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png'">
+        <img src="images/cloud.png" alt="구름" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png'">
         <div class="choice-title">구름</div>
         <div class="choice-desc">변화와 감정 흐름의 상징</div>
       </div>
@@ -413,8 +412,7 @@
            data-energy="넓고 포용적인 정서"
            data-message="겉보다 더 깊은 감정의 결을 들여다보게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="images/ocean.png" alt="바다"
-             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png'">
+        <img src="images/ocean.png" alt="바다" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png'">
         <div class="choice-title">바다</div>
         <div class="choice-desc">깊고 넓은 감정의 에너지</div>
       </div>
@@ -426,8 +424,7 @@
            data-energy="부드럽게 커지는 생명력"
            data-message="회복과 성장의 가능성을 보여주는 상징"
            onclick="toggleChoice(this)">
-        <img src="images/leaf.png" alt="잎새"
-             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png'">
+        <img src="images/leaf.png" alt="잎새" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png'">
         <div class="choice-title">잎새</div>
         <div class="choice-desc">자라남과 회복의 상징</div>
       </div>
@@ -439,8 +436,7 @@
            data-energy="예민하지만 아름다운 빛"
            data-message="감성과 관계의 온기를 품는 상징"
            onclick="toggleChoice(this)">
-        <img src="images/flower.png" alt="꽃별"
-             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png'">
+        <img src="images/flower.png" alt="꽃별" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png'">
         <div class="choice-title">꽃별</div>
         <div class="choice-desc">감성과 따뜻함의 기운</div>
       </div>
@@ -452,8 +448,7 @@
            data-energy="또렷하고 환한 기운"
            data-message="정체된 상태에서 중심을 다시 잡게 하는 상징"
            onclick="toggleChoice(this)">
-        <img src="images/sun.png" alt="해"
-             onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png'">
+        <img src="images/sun.png" alt="해" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png'">
         <div class="choice-title">해</div>
         <div class="choice-desc">밝음과 중심의 에너지</div>
       </div>
@@ -474,7 +469,7 @@
       <h2 class="modal-title">그림 조합 해설</h2>
       <div class="modal-sub">
         선택한 그림의 분위기를 함께 읽어낸 결과입니다.
-        선택 이미지는 그대로 보여주고, 조합 해설은 더 길고 자연스럽게 읽히도록 다듬었습니다.
+        대문 선택창은 그대로 두고, 조합 해설만 더 풍부하고 자연스럽게 다듬었습니다.
       </div>
 
       <div class="picked-images" id="pickedImages"></div>
@@ -661,7 +656,7 @@
 
       const line3 = `• 이 조합에는 ${moods[0] || "내면을 천천히 바라보는 힘"}${moods[1] ? `과 ${moods[1]}` : ""}${moods[2] ? `, 그리고 ${moods[2]}` : ""}이 함께 담겨 있어, 감정이 단순하지 않고 여러 층위로 움직이고 있을 가능성을 보여줍니다.`;
 
-      const line4 = `• 또한 ${energies[0] || "조용한 집중력"}${energies[1] ? `과 ${energies[1]}` : ""}${energies[2] ? `, 그리고 ${energies[2]}` : ""}이 겹치면서, 겉으로는 차분해 보여도 안쪽에서는 다시 앞으로 나아가려는 의지와 생기가 살아 있을 수 있습니다.`;
+      const line4 = `• 또한 ${energies[0] || "조용하지만 깊은 집중력"}${energies[1] ? `과 ${energies[1]}` : ""}${energies[2] ? `, 그리고 ${energies[2]}` : ""}이 겹치면서, 겉으로는 차분해 보여도 안쪽에서는 다시 앞으로 나아가려는 의지와 생기가 살아 있을 수 있습니다.`;
 
       const line5 = `• 지금의 마음은 ${messages[0] || "정리"}${messages[1] ? `와 ${messages[1]}` : ""}${messages[2] ? ` 그리고 ${messages[2]}` : ""} 사이를 오가며, 스스로를 다시 이해하고 다음 방향을 준비하는 과정에 가까워 보입니다. 너무 한 가지 감정으로 단정하기보다, 이 복합적인 상태 자체를 자연스럽게 받아들이는 것이 더 중요할 수 있습니다.`;
 
@@ -799,11 +794,15 @@
     }
 
     function loadImage(item) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.onload = () => resolve(img);
-        img.onerror = reject;
+        img.onerror = () => {
+          const fallback = new Image();
+          fallback.onload = () => resolve(fallback);
+          fallback.src = item.img;
+        };
         img.src = item.img;
       });
     }
