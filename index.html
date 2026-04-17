@@ -2,10 +2,14 @@
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
 <script>
-/* ✅ 카카오 초기화 (여기 반드시 본인 키 넣기) */
 Kakao.init('64849970060a38276a713204e56a7652');
 
-/* ✅ 공유 함수 */
+let currentResult = {
+  title: "마음 결과",
+  desc: "결과 설명",
+  image: "https://mind-image.nockd61.workers.dev/images/fire.png"
+};
+
 function shareKakao(title, description, imageUrl) {
   Kakao.Share.sendDefault({
     objectType: 'feed',
@@ -15,18 +19,26 @@ function shareKakao(title, description, imageUrl) {
       imageUrl: imageUrl,
       link: {
         mobileWebUrl: window.location.href,
-        webUrl: window.location.href,
-      },
+        webUrl: window.location.href
+      }
     },
     buttons: [
       {
         title: '결과 보러가기',
         link: {
           mobileWebUrl: window.location.href,
-          webUrl: window.location.href,
-        },
-      },
-    ],
+          webUrl: window.location.href
+        }
+      }
+    ]
   });
+}
+
+function shareResult() {
+  shareKakao(
+    currentResult.title,
+    currentResult.desc,
+    currentResult.image
+  );
 }
 </script>
