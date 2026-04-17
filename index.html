@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mind Image Choice</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      background: #f5effb;
+      color: #2a2433;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 34px;
+      font-weight: 800;
+      color: #3f3553;
+    }
+
+    .page-sub {
+      text-align: center;
+      color: #7b7292;
+      margin-bottom: 32px;
+      font-size: 16px;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 18px;
+    }
+
+    .choice-card {
+      background: #fff;
+      border: 2px solid #ece3f8;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(82, 58, 121, 0.08);
+      cursor: pointer;
+      transition: 0.2s ease;
+      text-align: center;
+      position: relative;
+    }
+
+    .choice-card:hover {
+      transform: translateY(-2px);
+      border-color: #c8b3ef;
+    }
+
+    .choice-card.selected {
+      border-color: #9f7aea;
+      background: #faf7ff;
+      box-shadow: 0 10px 26px rgba(132, 94, 194, 0.16);
+    }
+
+    .choice-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      border-radius: 18px;
+      background: #f8f4fc;
+      padding: 12px;
+    }
+
+    .choice-title {
+      margin-top: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: #4a4160;
+    }
+
+    .choice-desc {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #8a80a2;
+      min-height: 34px;
+      line-height: 1.35;
+    }
+
+    .bottom-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #a56df5, #d183f8);
+      color: white;
+      box-shadow: 0 8px 20px rgba(165, 109, 245, 0.28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-soft {
+      background: #ece6f7;
+      color: #51486a;
+    }
+
+    .selected-count {
+      text-align: center;
+      margin-top: 14px;
+      color: #7a7191;
+      font-size: 14px;
+    }
+
+    /* modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 35, 61, 0.28);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      width: min(760px, 100%);
+      max-height: 88vh;
+      overflow-y: auto;
+      background: #fbf9fd;
+      border-radius: 32px;
+      box-shadow: 0 18px 50px rgba(67, 49, 98, 0.18);
+      position: relative;
+      padding: 28px;
+    }
+
+    .modal-close {
+      position: absolute;
+      right: 20px;
+      top: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: #f1ebf9;
+      color: #453a5d;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 38px;
+      font-weight: 800;
+      color: #2f273d;
+    }
+
+    .modal-sub {
+      margin: 8px 0 18px;
+      color: #7d7491;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .picked-images {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .picked-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f0ebfa;
+      border: 1px solid #e2d7f5;
+      border-radius: 999px;
+      padding: 8px 14px 8px 8px;
+    }
+
+    .picked-chip img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      padding: 4px;
+      border: 1px solid #eadff7;
+    }
+
+    .picked-chip span {
+      font-size: 14px;
+      font-weight: 700;
+      color: #61547b;
+    }
+
+    .fusion-box {
+      background: linear-gradient(180deg, #f7f2fc, #fdfbfd);
+      border: 1px solid #e8dcf8;
+      border-radius: 24px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .fusion-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #5b4b82;
+      margin-bottom: 12px;
+    }
+
+    .fusion-inner {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .fusion-preview {
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f4ecfb 40%, #eadcf8 100%);
+      border-radius: 24px;
+      border: 1px solid #eadcf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: inset 0 0 24px rgba(160, 118, 219, 0.12);
+    }
+
+    .fusion-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .fusion-name {
+      font-size: 28px;
+      font-weight: 900;
+      color: #3d3154;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .fusion-desc {
+      color: #746a88;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .result-box {
+      background: #f8f5f1;
+      border: 1px solid #eee4d8;
+      border-radius: 24px;
+      padding: 20px 18px;
+    }
+
+    .result-title {
+      color: #6c63ff;
+      font-size: 30px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .result-lines {
+      display: grid;
+      gap: 10px;
+      color: #5a5567;
+      line-height: 1.8;
+      font-size: 16px;
+      white-space: pre-line;
+    }
+
+    .result-lines b {
+      color: #3e3551;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .choice-grid {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+      }
+
+      .fusion-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .fusion-preview {
+        width: 100%;
+        max-width: 260px;
+        height: 260px;
+        margin: 0 auto;
+      }
+
+      .modal-title {
+        font-size: 30px;
+      }
+
+      .result-title {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .choice-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .modal {
+        padding: 22px 16px 18px;
+        border-radius: 24px;
+      }
+
+      .modal-title {
+        font-size: 26px;
+      }
+
+      .picked-chip {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="page-title">내 마음 그림 조합은 어떤 기운일까요?</h1>
+    <p class="page-sub">그림 2~3개를 선택하면, 조합된 상징 이미지와 더 길어진 해설을 볼 수 있습니다.</p>
+
+    <!--
+      아래 카드의 img src만 세웅님 현재 사이트에서 쓰는 실제 이미지 경로로 바꿔주시면 됩니다.
+      data-* 값은 해설을 길게 만드는 데 사용됩니다.
+    -->
+    <div class="choice-grid" id="choiceGrid">
+      <div class="choice-card"
+           data-name="조용한 달"
+           data-keywords="고요,사색,정리"
+           data-mood="내면을 천천히 바라보는 힘"
+           data-energy="조용하지만 깊은 집중력"
+           data-message="마음을 가라앉히고 생각을 정리하게 하는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f319.png" alt="조용한 달">
+        <div class="choice-title">조용한 달</div>
+        <div class="choice-desc">혼자만의 정리와 사색의 기운</div>
+      </div>
+
+      <div class="choice-card"
+           data-name="별빛"
+           data-keywords="희망,회복,반짝임"
+           data-mood="어둠 속에서도 길을 찾는 마음"
+           data-energy="작지만 분명한 빛"
+           data-message="희망과 기대를 놓지 않게 하는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2b50.png" alt="별빛">
+        <div class="choice-title">별빛</div>
+        <div class="choice-desc">희망과 회복을 비추는 기운</div>
+      </div>
+
+      <div class="choice-card"
+           data-name="불빛"
+           data-keywords="열기,움직임,의지"
+           data-mood="행동으로 옮기고 싶은 마음"
+           data-energy="따뜻하고 전진하는 에너지"
+           data-message="멈춰 있던 감정을 다시 움직이게 하는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f525.png" alt="불빛">
+        <div class="choice-title">불빛</div>
+        <div class="choice-desc">에너지를 깨우는 전진의 기운</div>
+      </div>
+
+      <div class="choice-card"
+           data-name="구름"
+           data-keywords="흐름,변화,유연함"
+           data-mood="흔들리면서도 흘러가는 마음"
+           data-energy="부드럽고 이동하는 감정"
+           data-message="고정되지 않고 변화 속에서 의미를 찾게 하는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png" alt="구름">
+        <div class="choice-title">구름</div>
+        <div class="choice-desc">변화와 감정 흐름의 상징</div>
+      </div>
+
+      <div class="choice-card"
+           data-name="바다"
+           data-keywords="감정,깊이,수용"
+           data-mood="마음속 깊은 층을 담아내는 힘"
+           data-energy="넓고 포용적인 정서"
+           data-message="겉보다 더 깊은 감정의 결을 들여다보게 하는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png" alt="바다">
+        <div class="choice-title">바다</div>
+        <div class="choice-desc">깊고 넓은 감정의 에너지</div>
+      </div>
+
+      <div class="choice-card"
+           data-name="잎새"
+           data-keywords="회복,자람,순환"
+           data-mood="조용히 다시 살아나는 기운"
+           data-energy="부드럽게 커지는 생명력"
+           data-message="회복과 성장의 가능성을 보여주는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png" alt="잎새">
+        <div class="choice-title">잎새</div>
+        <div class="choice-desc">자라남과 회복의 상징</div>
+      </div>
+
+      <div class="choice-card"
+           data-name="꽃별"
+           data-keywords="감성,아름다움,관계"
+           data-mood="섬세하고 따뜻한 정서"
+           data-energy="예민하지만 아름다운 빛"
+           data-message="감성과 관계의 온기를 품는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png" alt="꽃별">
+        <div class="choice-title">꽃별</div>
+        <div class="choice-desc">감성과 따뜻함의 기운</div>
+      </div>
+
+      <div class="choice-card"
+           data-name="해"
+           data-keywords="생기,명료함,중심"
+           data-mood="마음을 밝게 드러내는 힘"
+           data-energy="또렷하고 환한 기운"
+           data-message="정체된 상태에서 중심을 다시 잡게 하는 상징"
+           onclick="toggleChoice(this)">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png" alt="해">
+        <div class="choice-title">해</div>
+        <div class="choice-desc">밝음과 중심의 에너지</div>
+      </div>
+    </div>
+
+    <div class="selected-count" id="selectedCount">현재 선택: 0개</div>
+
+    <div class="bottom-bar">
+      <button class="btn btn-primary" onclick="openExplainModal()">조합 해설 보기</button>
+      <button class="btn btn-soft" onclick="resetChoices()">다시 선택</button>
+    </div>
+  </div>
+
+  <!-- 해설 모달 -->
+  <div class="modal-backdrop" id="explainModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeExplainModal()">×</button>
+
+      <h2 class="modal-title">그림 조합 해설</h2>
+      <div class="modal-sub">
+        선택한 그림의 분위기를 함께 읽어낸 결과입니다.  
+        이번 버전은 텍스트 대신 실제 선택 이미지를 보여주고, 2~3개 조합 시 하나의 통합 이미지로 해석해줍니다.
+      </div>
+
+      <!-- 선택 이미지 썸네일 -->
+      <div class="picked-images" id="pickedImages"></div>
+
+      <!-- 통합 이미지 -->
+      <div class="fusion-box">
+        <div class="fusion-title">조합된 상징 이미지</div>
+        <div class="fusion-inner">
+          <div class="fusion-preview">
+            <img id="fusionImage" alt="조합 이미지">
+          </div>
+          <div>
+            <div class="fusion-name" id="fusionName">마음의 조합 캐릭터</div>
+            <div class="fusion-desc" id="fusionDesc">
+              선택한 상징들이 하나의 기운으로 합쳐진 이미지입니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 긴 해설 -->
+      <div class="result-box">
+        <div class="result-title">해설 결과</div>
+        <div class="result-lines" id="longExplainText"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="saveResult()">해설 저장</button>
+        <button class="btn btn-soft" onclick="shareResult()">공유하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MAX_SELECT = 3;
+    const MIN_SELECT = 2;
+    let selectedCards = [];
+    let lastExplainText = "";
+    let lastFusionName = "";
+
+    function toggleChoice(card) {
+      const already = card.classList.contains("selected");
+
+      if (already) {
+        card.classList.remove("selected");
+      } else {
+        const current = document.querySelectorAll(".choice-card.selected");
+        if (current.length >= MAX_SELECT) {
+          alert("그림은 최대 3개까지 선택할 수 있습니다.");
+          return;
+        }
+        card.classList.add("selected");
+      }
+
+      selectedCards = Array.from(document.querySelectorAll(".choice-card.selected"));
+      updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+      document.getElementById("selectedCount").textContent = `현재 선택: ${selectedCards.length}개`;
+    }
+
+    function resetChoices() {
+      document.querySelectorAll(".choice-card.selected").forEach(card => {
+        card.classList.remove("selected");
+      });
+      selectedCards = [];
+      updateSelectedCount();
+    }
+
+    function openExplainModal() {
+      selectedCards = Array.from(document.querySelectorAll(".choice-card.selected"));
+
+      if (selectedCards.length < MIN_SELECT) {
+        alert("그림은 2개 이상 선택해 주세요.");
+        return;
+      }
+
+      renderPickedImages(selectedCards);
+      buildFusionResult(selectedCards);
+      document.getElementById("explainModal").classList.add("show");
+    }
+
+    function closeExplainModal() {
+      document.getElementById("explainModal").classList.remove("show");
+    }
+
+    function renderPickedImages(cards) {
+      const wrap = document.getElementById("pickedImages");
+      wrap.innerHTML = "";
+
+      cards.forEach(card => {
+        const img = card.querySelector("img").src;
+        const name = card.dataset.name || "";
+
+        const chip = document.createElement("div");
+        chip.className = "picked-chip";
+        chip.innerHTML = `
+          <img src="${img}" alt="${name}">
+          <span>${name}</span>
+        `;
+        wrap.appendChild(chip);
+      });
+    }
+
+    async function buildFusionResult(cards) {
+      const items = cards.map(card => ({
+        name: card.dataset.name || "",
+        keywords: (card.dataset.keywords || "").split(",").map(v => v.trim()).filter(Boolean),
+        mood: card.dataset.mood || "",
+        energy: card.dataset.energy || "",
+        message: card.dataset.message || "",
+        img: card.querySelector("img").src
+      }));
+
+      const fusionDataUrl = await createFusionImage(items);
+      document.getElementById("fusionImage").src = fusionDataUrl;
+
+      const fusionName = makeFusionName(items);
+      const fusionDesc = makeFusionDesc(items);
+      const longExplain = makeLongExplain(items, fusionName);
+
+      document.getElementById("fusionName").textContent = fusionName;
+      document.getElementById("fusionDesc").textContent = fusionDesc;
+
+      const explainBox = document.getElementById("longExplainText");
+      explainBox.innerHTML = longExplain
+        .split("\n")
+        .map(line => `<div>${line}</div>`)
+        .join("");
+
+      lastExplainText = longExplain;
+      lastFusionName = fusionName;
+    }
+
+    function makeFusionName(items) {
+      const names = items.map(item => item.name);
+
+      const specialMap = {
+        "조용한 달|별빛": "달빛 길잡이형",
+        "조용한 달|불빛": "고요한 불씨형",
+        "조용한 달|별빛|불빛": "별불 달등형",
+        "별빛|불빛": "빛의 추진자형",
+        "구름|별빛": "흐르는 별구름형",
+        "바다|달": "밤바다 파동형",
+        "바다|별빛": "별을 품은 파도형",
+        "잎새|꽃별": "자라나는 정원형",
+        "해|불빛": "두 겹의 태양형"
+      };
+
+      const sortedKey = [...names].sort().join("|");
+      if (specialMap[sortedKey]) return specialMap[sortedKey];
+
+      const front = names[0] || "마음";
+      const back = names[names.length - 1] || "상징";
+
+      if (items.length === 2) return `${front}·${back} 조합형`;
+      return `${front} ${back} 통합형`;
+    }
+
+    function makeFusionDesc(items) {
+      const allKeywords = [...new Set(items.flatMap(item => item.keywords))];
+      const keywordText = allKeywords.slice(0, 4).join(", ");
+
+      return `선택한 ${items.length}개의 상징이 하나의 장면으로 합쳐진 결과입니다. 이 조합은 ${keywordText}의 흐름을 함께 품고 있으며, 서로 다른 감정을 하나의 방향으로 묶어주는 성격을 가집니다.`;
+    }
+
+    function makeLongExplain(items, fusionName) {
+      const names = items.map(item => item.name).join(", ");
+      const moods = items.map(item => item.mood).filter(Boolean);
+      const energies = items.map(item => item.energy).filter(Boolean);
+      const messages = items.map(item => item.message).filter(Boolean);
+      const allKeywords = [...new Set(items.flatMap(item => item.keywords))];
+
+      const line1 = `• <b>선택한 그림</b> : ${names}`;
+      const line2 = `• <b>${fusionName}</b>은(는) ${allKeywords.slice(0, 3).join(", ")}의 기운이 동시에 살아 있는 조합으로 볼 수 있습니다. 서로 다른 상징이지만 지금의 마음 안에서는 하나의 흐름으로 연결되고 있습니다.`;
+      const line3 = `• 이 조합에는 ${moods[0] || "내면을 바라보는 힘"}과 ${moods[1] || "감정을 정리하는 힘"}이 함께 담겨 있어, 감정이 단순하지 않고 여러 층위로 움직이고 있을 가능성을 보여줍니다.`;
+      const line4 = `• 또한 ${energies[0] || "조용한 집중력"}과 ${energies[1] || "회복의 기운"}이 겹치면서, 겉으로는 차분해 보여도 안쪽에서는 다시 앞으로 나아가려는 의지와 생기가 살아 있을 수 있습니다.`;
+      const line5 = `• 지금의 마음은 ${messages[0] || "정리"}와 ${messages[1] || "희망"} 그리고 ${messages[2] || "전진"} 사이를 오가며, 스스로를 다시 이해하고 다음 방향을 준비하는 과정에 가까워 보입니다. 너무 한 가지 감정으로 단정하기보다, 이 복합적인 상태 자체를 자연스럽게 받아들이는 것이 더 중요할 수 있습니다.`;
+
+      return [line1, line2, line3, line4, line5].join("\n");
+    }
+
+    async function createFusionImage(items) {
+      const size = 720;
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+
+      // 배경
+      const bg = ctx.createRadialGradient(size * 0.3, size * 0.25, 20, size * 0.5, size * 0.5, size * 0.75);
+      bg.addColorStop(0, "#ffffff");
+      bg.addColorStop(0.45, "#f3eafd");
+      bg.addColorStop(1, "#e4d3f9");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+
+      // 부드러운 광원
+      for (let i = 0; i < 6; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${0.12 + i * 0.03})`;
+        ctx.arc(
+          Math.random() * size,
+          Math.random() * size,
+          40 + Math.random() * 90,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+      }
+
+      const images = await Promise.all(items.map(loadImage));
+
+      const positions =
+        items.length === 2
+          ? [
+              { x: 220, y: 360, r: 135 },
+              { x: 500, y: 360, r: 135 }
+            ]
+          : [
+              { x: 360, y: 205, r: 110 },
+              { x: 220, y: 470, r: 110 },
+              { x: 500, y: 470, r: 110 }
+            ];
+
+      // 연결 라인
+      ctx.save();
+      ctx.strokeStyle = "rgba(168, 123, 234, 0.35)";
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      if (positions.length >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(positions[0].x, positions[0].y);
+        for (let i = 1; i < positions.length; i++) {
+          ctx.lineTo(positions[i].x, positions[i].y);
+        }
+        if (positions.length === 3) {
+          ctx.lineTo(positions[0].x, positions[0].y);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 중앙 빛
+      const centerGlow = ctx.createRadialGradient(360, 360, 20, 360, 360, 180);
+      centerGlow.addColorStop(0, "rgba(255,255,255,0.95)");
+      centerGlow.addColorStop(0.3, "rgba(255,243,200,0.35)");
+      centerGlow.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = centerGlow;
+      ctx.beginPath();
+      ctx.arc(360, 360, 180, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 원형 이미지 배치
+      images.forEach((img, index) => {
+        const pos = positions[index];
+
+        ctx.save();
+        ctx.shadowColor = "rgba(119, 76, 188, 0.22)";
+        ctx.shadowBlur = 18;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, pos.r + 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, pos.r, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, pos.x - pos.r, pos.y - pos.r, pos.r * 2, pos.r * 2);
+        ctx.restore();
+
+        ctx.save();
+        ctx.strokeStyle = "rgba(255,255,255,0.95)";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, pos.r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // 중앙 별표 느낌
+      ctx.save();
+      ctx.fillStyle = "rgba(255, 232, 121, 0.95)";
+      drawStar(ctx, 360, 360, 5, 34, 16);
+      ctx.fill();
+      ctx.restore();
+
+      return canvas.toDataURL("image/png");
+    }
+
+    function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+      let rot = Math.PI / 2 * 3;
+      let x = cx;
+      let y = cy;
+      const step = Math.PI / spikes;
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - outerRadius);
+
+      for (let i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+      }
+
+      ctx.lineTo(cx, cy - outerRadius);
+      ctx.closePath();
+    }
+
+    function loadImage(item) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = item.img;
+      });
+    }
+
+    function saveResult() {
+      if (!lastExplainText) {
+        alert("먼저 조합 해설을 생성해 주세요.");
+        return;
+      }
+
+      const saveData = {
+        fusionName: lastFusionName,
+        explain: lastExplainText,
+        savedAt: new Date().toISOString()
+      };
+
+      const prev = JSON.parse(localStorage.getItem("mindExplainHistory") || "[]");
+      prev.unshift(saveData);
+      localStorage.setItem("mindExplainHistory", JSON.stringify(prev));
+
+      alert("해설이 저장되었습니다.");
+    }
+
+    async function shareResult() {
+      const text = `${lastFusionName}\n\n${lastExplainText.replace(/<[^>]*>/g, "")}\n\n${location.href}`;
+
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: lastFusionName || "그림 조합 해설",
+            text: text,
+            url: location.href
+          });
+        } else {
+          await navigator.clipboard.writeText(text);
+          alert("공유 문구가 복사되었습니다.");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    window.addEventListener("click", function (e) {
+      const modal = document.getElementById("explainModal");
+      if (e.target === modal) {
+        closeExplainModal();
+      }
+    });
+  </script>
+</body>
+</html>
