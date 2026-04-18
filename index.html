@@ -148,14 +148,17 @@ body{
 </head>
 <body>
 <div class="wrap">
-  <h1 class="page-title">내 마음 그림 조합은 어떤 기운일까요?</h1>
-  <div class="page-sub">지금 올려주신 3D 그림 그대로 넣었습니다. 카드를 누르면 이모티콘이 움직입니다.</div>
+  <h1 class="page-title">내 마음을 읽어보세요</h1>
+  <div class="page-sub"></div>
   <div class="grid" id="grid"></div>
   <div class="count" id="countText">현재 선택: 0개</div>
   <div class="actions">
     <button class="btn primary" id="explainBtn">조합 해설 보기</button>
-    <button class="btn primary" id="playAllBtn">전체 움직이기</button>
     <button class="btn light" id="resetBtn">다시 선택</button>
+  </div>
+  <div class="view-stats">
+    <span>총 조회수 <strong id="totalViews">0</strong> 회</span>
+    <span>오늘 조회수 <strong id="todayViews">0</strong> 회</span>
   </div>
 </div>
 
@@ -202,6 +205,38 @@ const resultText = document.getElementById('resultText');
 
 let selected = [];
 let lastResult = { title:"", text:"", image:"" };
+
+function todayKey(){
+  const d = new Date();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${d.getFullYear()}-${m}-${day}`;
+}
+
+function initViewStats(){
+  const totalKey = 'mindImageTotalViews';
+  const todayDateKey = 'mindImageTodayViewsDate';
+  const todayCountKey = 'mindImageTodayViewsCount';
+  const today = todayKey();
+
+  let total = Number(localStorage.getItem(totalKey) || '0') + 1;
+  localStorage.setItem(totalKey, String(total));
+
+  let savedDate = localStorage.getItem(todayDateKey);
+  let todayCount = 0;
+  if (savedDate === today) {
+    todayCount = Number(localStorage.getItem(todayCountKey) || '0') + 1;
+  } else {
+    localStorage.setItem(todayDateKey, today);
+    todayCount = 1;
+  }
+  localStorage.setItem(todayCountKey, String(todayCount));
+
+  const totalEl = document.getElementById('totalViews');
+  const todayEl = document.getElementById('todayViews');
+  if (totalEl) totalEl.textContent = total.toLocaleString('ko-KR');
+  if (todayEl) todayEl.textContent = todayCount.toLocaleString('ko-KR');
+}
 
 function positionPercent(index){
   const col = index % 4;
@@ -271,11 +306,6 @@ function resetCards(){
   updateCount();
 }
 
-function playAll(){
-  document.querySelectorAll('.card').forEach((card, i) => {
-    setTimeout(() => playCard(card), i * 90);
-  });
-}
 
 function selectedItems(){
   return selected.map(i => ({...ITEMS[i], index:i}));
@@ -445,13 +475,13 @@ async function shareCopy(){
 }
 
 document.getElementById('resetBtn').addEventListener('click', resetCards);
-document.getElementById('playAllBtn').addEventListener('click', playAll);
 document.getElementById('explainBtn').addEventListener('click', openExplain);
 document.getElementById('closeBtn').addEventListener('click', closeModal);
 document.getElementById('saveBtn').addEventListener('click', saveResult);
 document.getElementById('shareBtn').addEventListener('click', shareCopy);
 modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
 
+initViewStats();
 buildGrid();
 updateCount();
 </script>
