@@ -74,7 +74,7 @@
     }
 
     .choice-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-6px) scale(1.015);
       border-color: #c8b3ef;
       box-shadow:
         0 18px 40px rgba(124, 77, 255, 0.14),
@@ -84,48 +84,73 @@
     .choice-card.selected {
       border-color: var(--line-strong);
       background: #faf7ff;
-      box-shadow: 0 10px 26px rgba(132, 94, 194, 0.16);
+      box-shadow:
+        0 10px 26px rgba(132, 94, 194, 0.16),
+        0 0 0 4px rgba(178, 140, 255, 0.10);
+      animation: selectedBounce 0.45s ease;
     }
 
     .image-frame{
       width: 100%;
       aspect-ratio: 1 / 1;
       border-radius: 22px;
-      background: linear-gradient(180deg, #fcfbff 0%, #f3ecff 100%);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 18%, rgba(244,236,255,0.9) 52%, rgba(236,224,255,0.95) 100%);
       border: 1px solid #e6dbf7;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 10px;
       overflow: hidden;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.95),
+        inset 0 -12px 24px rgba(179, 149, 226, 0.08);
+      position: relative;
+    }
+
+    .image-frame::before{
+      content:"";
+      position:absolute;
+      inset:10px;
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.48), rgba(255,255,255,0));
+      pointer-events:none;
     }
 
     .choice-card img {
       width: auto;
       height: auto;
-      max-width: 70%;
-      max-height: 70%;
+      max-width: 68%;
+      max-height: 68%;
       object-fit: contain;
-      border-radius: 12px;
-      background: #ffffff;
-      padding: 4px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.72);
+      padding: 6px;
       image-rendering: auto;
       filter:
-        contrast(1.15)
-        saturate(1.1)
-        brightness(1.02)
-        drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+        saturate(1.08)
+        brightness(1.03)
+        drop-shadow(0 8px 16px rgba(98, 77, 142, 0.12));
       transform: translateZ(0);
       backface-visibility: hidden;
+      animation: iconFloat 3.6s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
     }
 
-    /* 구름 아이콘 라인 강조 */
-    img[src*="cloud"]{
-      filter:
-        brightness(0)
-        contrast(1.35)
-        drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+    .choice-card:nth-child(2n) img { animation-delay: .35s; }
+    .choice-card:nth-child(3n) img { animation-delay: .8s; }
+    .choice-card:nth-child(4n) img { animation-delay: 1.15s; }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.04); }
+    }
+
+    @keyframes selectedBounce {
+      0% { transform: scale(0.96); }
+      55% { transform: scale(1.03); }
+      100% { transform: scale(1); }
     }
 
     .choice-title {
@@ -447,26 +472,26 @@
     <div class="choice-grid" id="choiceGrid">
       <!-- 1행 -->
       <div class="choice-card" data-name="조용한 달" data-keywords="고요,사색,정리" data-mood="내면을 천천히 바라보는 힘" data-energy="조용하지만 깊은 집중력" data-message="마음을 가라앉히고 생각을 정리하게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/moon.png" alt="조용한 달"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f319.png" alt="조용한 달"></div>
         <div class="choice-title">조용한 달</div>
         <div class="choice-desc">혼자만의 정리와 사색의 기운</div>
       </div>
 
       <div class="choice-card" data-name="별빛" data-keywords="희망,회복,반짝임" data-mood="어둠 속에서도 길을 찾는 마음" data-energy="작지만 분명한 빛" data-message="희망과 기대를 놓지 않게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/star.png" alt="별빛"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2b50.png" alt="별빛"></div>
         <div class="choice-title">별빛</div>
         <div class="choice-desc">희망과 회복을 비추는 기운</div>
       </div>
 
       <div class="choice-card" data-name="불빛" data-keywords="열기,움직임,의지" data-mood="행동으로 옮기고 싶은 마음" data-energy="따뜻하고 전진하는 에너지" data-message="멈춰 있던 감정을 다시 움직이게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/fire.png" alt="불빛"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f525.png" alt="불빛"></div>
         <div class="choice-title">불빛</div>
         <div class="choice-desc">에너지를 깨우는 전진의 기운</div>
       </div>
 
       <div class="choice-card" data-name="구름" data-keywords="흐름,변화,유연함" data-mood="흔들리면서도 흘러가는 마음" data-energy="부드럽고 이동하는 감정" data-message="고정되지 않고 변화 속에서 의미를 찾게 하는 상징" onclick="toggleChoice(this)">
         <div class="image-frame">
-          <img src="images/cloud.png" class="cloud-img" alt="구름" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/414/414825.png'">
+          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png" alt="구름" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/414/414825.png'">
         </div>
         <div class="choice-title">구름</div>
         <div class="choice-desc">변화와 감정 흐름의 상징</div>
@@ -474,75 +499,75 @@
 
       <!-- 2행 -->
       <div class="choice-card" data-name="바다" data-keywords="감정,깊이,수용" data-mood="마음속 깊은 층을 담아내는 힘" data-energy="넓고 포용적인 정서" data-message="겉보다 더 깊은 감정의 결을 들여다보게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/ocean.png" alt="바다" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png" alt="바다" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png'"></div>
         <div class="choice-title">바다</div>
         <div class="choice-desc">깊고 넓은 감정의 에너지</div>
       </div>
 
       <div class="choice-card" data-name="잎새" data-keywords="회복,자람,순환" data-mood="조용히 다시 살아나는 기운" data-energy="부드럽게 커지는 생명력" data-message="회복과 성장의 가능성을 보여주는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/leaf.png" alt="잎새" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png" alt="잎새" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png'"></div>
         <div class="choice-title">잎새</div>
         <div class="choice-desc">자라남과 회복의 상징</div>
       </div>
 
       <div class="choice-card" data-name="꽃별" data-keywords="감성,아름다움,관계" data-mood="섬세하고 따뜻한 정서" data-energy="예민하지만 아름다운 빛" data-message="감성과 관계의 온기를 품는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/flower.png" alt="꽃별" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png" alt="꽃별" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png'"></div>
         <div class="choice-title">꽃별</div>
         <div class="choice-desc">감성과 따뜻함의 기운</div>
       </div>
 
       <div class="choice-card" data-name="해" data-keywords="생기,명료함,중심" data-mood="마음을 밝게 드러내는 힘" data-energy="또렷하고 환한 기운" data-message="정체된 상태에서 중심을 다시 잡게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/sun.png" alt="해" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png" alt="해" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png'"></div>
         <div class="choice-title">해</div>
         <div class="choice-desc">밝음과 중심의 에너지</div>
       </div>
 
       <!-- 3행: 동물 -->
       <div class="choice-card" data-name="고양이" data-keywords="직감,관찰,독립" data-mood="조용히 살피며 자기 리듬을 지키는 마음" data-energy="예민하지만 유연한 집중력" data-message="혼자만의 감각으로 세상을 읽어내는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/cat.png" alt="고양이" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png" alt="고양이" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png'"></div>
         <div class="choice-title">고양이</div>
         <div class="choice-desc">직감과 관찰의 동물</div>
       </div>
 
       <div class="choice-card" data-name="강아지" data-keywords="친밀,충성,따뜻함" data-mood="가까이 다가가 마음을 나누는 힘" data-energy="부드럽고 정직한 온기" data-message="관계 속에서 안정과 애정을 만드는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/dog.png" alt="강아지" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f436.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f436.png" alt="강아지" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f436.png'"></div>
         <div class="choice-title">강아지</div>
         <div class="choice-desc">관계와 애정의 동물</div>
       </div>
 
       <div class="choice-card" data-name="여우" data-keywords="재치,민감함,판단" data-mood="빠르게 흐름을 읽고 움직이는 감각" data-energy="날렵하고 선명한 눈치" data-message="상황을 파악하고 방향을 바꾸는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/fox.png" alt="여우" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98a.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98a.png" alt="여우" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98a.png'"></div>
         <div class="choice-title">여우</div>
         <div class="choice-desc">재치와 판단의 동물</div>
       </div>
 
       <div class="choice-card" data-name="사슴" data-keywords="섬세,경계,순수" data-mood="조용히 주변을 느끼는 감각" data-energy="부드럽고 조심스러운 생명력" data-message="예민하지만 맑은 마음을 지키는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/deer.png" alt="사슴" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98c.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98c.png" alt="사슴" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98c.png'"></div>
         <div class="choice-title">사슴</div>
         <div class="choice-desc">섬세함과 순수의 동물</div>
       </div>
 
       <!-- 4행 -->
       <div class="choice-card" data-name="나비" data-keywords="변화,가벼움,개화" data-mood="새로운 단계로 옮겨가는 기운" data-energy="가볍고 아름답게 퍼지는 변화" data-message="낡은 상태를 벗고 새 흐름으로 넘어가는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/butterfly.png" alt="나비" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png" alt="나비" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png'"></div>
         <div class="choice-title">나비</div>
         <div class="choice-desc">변화와 개화의 동물</div>
       </div>
 
       <div class="choice-card" data-name="새" data-keywords="자유,소식,상승" data-mood="막혀 있던 마음을 열고 올라가는 힘" data-energy="가볍고 시원한 확장성" data-message="시야를 넓히고 멀리 바라보게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/bird.png" alt="새" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f426.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f426.png" alt="새" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f426.png'"></div>
         <div class="choice-title">새</div>
         <div class="choice-desc">자유와 시야의 동물</div>
       </div>
 
       <div class="choice-card" data-name="토끼" data-keywords="민감,순간반응,부드러움" data-mood="작은 기척에도 반응하는 섬세함" data-energy="조용하지만 빠른 감정의 움직임" data-message="예민한 감각과 순한 마음이 함께 있는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/rabbit.png" alt="토끼" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f407.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f407.png" alt="토끼" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f407.png'"></div>
         <div class="choice-title">토끼</div>
         <div class="choice-desc">민감함과 부드러움의 동물</div>
       </div>
 
       <div class="choice-card" data-name="곰" data-keywords="안정,보호,묵직함" data-mood="쉽게 흔들리지 않는 중심감" data-energy="느리지만 든든한 힘" data-message="스스로와 주변을 지켜주는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/bear.png" alt="곰" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43b.png'"></div>
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43b.png" alt="곰" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43b.png'"></div>
         <div class="choice-title">곰</div>
         <div class="choice-desc">안정과 보호의 동물</div>
       </div>
