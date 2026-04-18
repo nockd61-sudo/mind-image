@@ -59,20 +59,26 @@
     }
 
     .choice-card {
-      background: var(--card);
-      border: 2px solid var(--line);
-      border-radius: 24px;
-      padding: 16px;
-      box-shadow: 0 8px 24px rgba(82, 58, 121, 0.08);
+      background: rgba(255,255,255,0.92);
+      border: 1.5px solid var(--line);
+      border-radius: 26px;
+      padding: 18px 14px 20px;
+      box-shadow:
+        0 12px 30px rgba(124, 77, 255, 0.08),
+        0 4px 12px rgba(0,0,0,0.04);
       cursor: pointer;
-      transition: 0.2s ease;
+      transition: all 0.25s ease;
       text-align: center;
       position: relative;
+      backdrop-filter: blur(3px);
     }
 
     .choice-card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px);
       border-color: #c8b3ef;
+      box-shadow:
+        0 18px 40px rgba(124, 77, 255, 0.14),
+        0 6px 18px rgba(0,0,0,0.06);
     }
 
     .choice-card.selected {
@@ -81,63 +87,63 @@
       box-shadow: 0 10px 26px rgba(132, 94, 194, 0.16);
     }
 
- .image-frame{
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid #e7dcf7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  overflow: hidden;
-}
+    .image-frame{
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fcfbff 0%, #f3ecff 100%);
+      border: 1px solid #e6dbf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+    }
 
-.choice-card img {
-  width: auto;
-  height: auto;
-  max-width: 72%;
-  max-height: 72%;
-  object-fit: contain;
-  border-radius: 14px;
-  background: #ffffff;
-  padding: 4px;
-  image-rendering: auto;
-  filter:
-    contrast(1.22)
-    saturate(1.18)
-    brightness(1.03)
-    drop-shadow(0 0 0.8px rgba(20,15,34,0.95))
-    drop-shadow(0 0 0.8px rgba(20,15,34,0.95))
-    drop-shadow(0 0 0.8px rgba(20,15,34,0.95))
-    drop-shadow(0 1px 1px rgba(255,255,255,0.9));
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
+    .choice-card img {
+      width: auto;
+      height: auto;
+      max-width: 70%;
+      max-height: 70%;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 4px;
+      image-rendering: auto;
+      filter:
+        contrast(1.15)
+        saturate(1.1)
+        brightness(1.02)
+        drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
 
-/* ✅ 구름만 검정 라인 */
-img[src*="cloud"]{
-  filter: brightness(0) contrast(1.4);
-}
-  filter: brightness(0) contrast(1.4);
-}
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
+    /* 구름 아이콘 라인 강조 */
+    img[src*="cloud"]{
+      filter:
+        brightness(0)
+        contrast(1.35)
+        drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+    }
+
     .choice-title {
-      margin-top: 10px;
-      font-weight: 700;
-      font-size: 15px;
-      color: #4a4160;
+      margin-top: 12px;
+      font-weight: 800;
+      font-size: 22px;
+      color: #3f3553;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
     }
 
     .choice-desc {
-      margin-top: 6px;
-      font-size: 13px;
+      margin-top: 8px;
+      font-size: 15px;
       color: #8a80a2;
-      min-height: 34px;
-      line-height: 1.35;
+      min-height: 42px;
+      line-height: 1.45;
+      word-break: keep-all;
     }
 
     .bottom-bar {
@@ -374,12 +380,58 @@ img[src*="cloud"]{
     }
 
     @media (max-width: 560px) {
-      .choice-grid { grid-template-columns: 1fr 1fr; }
+      .wrap {
+        padding: 24px 14px 60px;
+      }
+
+      .page-title {
+        font-size: 26px;
+        line-height: 1.35;
+      }
+
+      .page-sub {
+        font-size: 14px;
+        line-height: 1.55;
+        margin-bottom: 24px;
+      }
+
+      .choice-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .choice-card {
+        border-radius: 22px;
+        padding: 14px 10px 16px;
+      }
+
+      .image-frame {
+        border-radius: 18px;
+        padding: 8px;
+      }
+
+      .choice-card img {
+        max-width: 72%;
+        max-height: 72%;
+      }
+
+      .choice-title {
+        font-size: 18px;
+        margin-top: 10px;
+      }
+
+      .choice-desc {
+        font-size: 13px;
+        min-height: 38px;
+      }
+
       .modal {
         padding: 22px 16px 18px;
         border-radius: 24px;
       }
+
       .modal-title { font-size: 26px; }
+
       .picked-chip {
         width: 100%;
         justify-content: flex-start;
@@ -413,7 +465,9 @@ img[src*="cloud"]{
       </div>
 
       <div class="choice-card" data-name="구름" data-keywords="흐름,변화,유연함" data-mood="흔들리면서도 흘러가는 마음" data-energy="부드럽고 이동하는 감정" data-message="고정되지 않고 변화 속에서 의미를 찾게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><img src="images/cloud.png" class="cloud-img" alt="구름" onerror="this.src='https://cdn.jsdelivr.net/...2601.png'"></div>
+        <div class="image-frame">
+          <img src="images/cloud.png" class="cloud-img" alt="구름" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/414/414825.png'">
+        </div>
         <div class="choice-title">구름</div>
         <div class="choice-desc">변화와 감정 흐름의 상징</div>
       </div>
