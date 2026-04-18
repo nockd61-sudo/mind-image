@@ -34,7 +34,15 @@ body{
   cursor:pointer;transition:.22s ease;overflow:hidden;backdrop-filter:blur(4px)
 }
 .card:hover{transform:translateY(-5px);box-shadow:var(--shadow-strong);border-color:#cfbbef}
-.card.selected{border-color:var(--line-strong);background:linear-gradient(180deg,#fffcff,#f7efff);box-shadow:0 0 0 4px rgba(184,144,242,.14), var(--shadow-strong)}
+.card.selected{border-color:#7c4dff;background:linear-gradient(180deg,#ffffff,#f0e6ff);box-shadow:0 0 0 4px rgba(124,77,255,.22), 0 16px 34px rgba(124,77,255,.18), var(--shadow-strong);transform:translateY(-4px) scale(1.02)}
+.card.selected .name{color:#5b34b3}
+.card.selected .desc{color:#6d5a92}
+.card.selected.order-1{border-color:#ff6b6b;background:linear-gradient(180deg,#fffdfd,#ffe9e9);box-shadow:0 0 0 4px rgba(255,107,107,.22),0 16px 34px rgba(255,107,107,.18), var(--shadow-strong)}
+.card.selected.order-1 .badge{background:linear-gradient(135deg,#ff8d8d,#ff6b6b);color:#fff}
+.card.selected.order-2{border-color:#4dabf7;background:linear-gradient(180deg,#fcfeff,#e8f4ff);box-shadow:0 0 0 4px rgba(77,171,247,.22),0 16px 34px rgba(77,171,247,.18), var(--shadow-strong)}
+.card.selected.order-2 .badge{background:linear-gradient(135deg,#74c0fc,#4dabf7);color:#fff}
+.card.selected.order-3{border-color:#51cf66;background:linear-gradient(180deg,#fcfffd,#e9ffef);box-shadow:0 0 0 4px rgba(81,207,102,.22),0 16px 34px rgba(81,207,102,.18), var(--shadow-strong)}
+.card.selected.order-3 .badge{background:linear-gradient(135deg,#8ce99a,#51cf66);color:#fff}
 .card::before{
   content:"";position:absolute;inset:0;background:
   radial-gradient(circle at 18% 15%, rgba(255,255,255,.95), rgba(255,255,255,0) 28%),
@@ -274,6 +282,25 @@ function updateCount(){
   countText.textContent = `현재 선택: ${selected.length}개`;
 }
 
+function syncSelectedStyles(){
+  document.querySelectorAll('.card').forEach(card => {
+    card.classList.remove('selected','order-1','order-2','order-3');
+    card.removeAttribute('data-order');
+    const badge = card.querySelector('.badge');
+    if (badge) badge.textContent = '3D';
+  });
+
+  selected.forEach((idx, i) => {
+    const card = document.querySelector(`.card[data-index="${idx}"]`);
+    if (!card) return;
+    const order = i + 1;
+    card.classList.add('selected', `order-${order}`);
+    card.setAttribute('data-order', String(order));
+    const badge = card.querySelector('.badge');
+    if (badge) badge.textContent = `${order}번`;
+  });
+}
+
 function playCard(card){
   card.classList.remove('playing');
   void card.offsetWidth;
@@ -287,22 +314,22 @@ function toggleCard(card){
 
   if (exists) {
     selected = selected.filter(v => v !== idx);
-    card.classList.remove('selected');
   } else {
     if (selected.length >= MAX_SELECT) {
       alert('그림은 최대 3개까지 선택할 수 있습니다.');
       return;
     }
     selected.push(idx);
-    card.classList.add('selected');
   }
+
+  syncSelectedStyles();
   playCard(card);
   updateCount();
 }
 
 function resetCards(){
   selected = [];
-  document.querySelectorAll('.card.selected').forEach(card => card.classList.remove('selected'));
+  syncSelectedStyles();
   updateCount();
 }
 
@@ -316,11 +343,11 @@ function buildPicked(){
   pickedBox.innerHTML = picked.map(item => {
     const p = positionPercent(item.index);
     return `
-      <div class="chip">
+      <div class="chip chip-order-${selected.indexOf(item.index)+1}">
         <div class="chip-icon">
           <div class="sprite" style="background-image:url('${INLINE_SHEET}');background-size:400% 400%;background-position:${p.x}% ${p.y}%;"></div>
         </div>
-        <span>${item.name}</span>
+        <span>${selected.indexOf(item.index)+1}번 · ${item.name}</span>
       </div>
     `;
   }).join('');
@@ -483,6 +510,7 @@ modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(
 
 initViewStats();
 buildGrid();
+syncSelectedStyles();
 updateCount();
 </script>
 </body>
