@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mind Image Choice</title>
 
+  <!-- 카카오 SDK -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
   <style>
@@ -16,19 +17,17 @@
       --muted: #7b7292;
       --card: #ffffff;
       --line: #ece3f8;
-      --line-strong: #9c6cff;
+      --line-strong: #b28cff;
       --soft: #f8f4fc;
       --chip: #f0ebfa;
-      --brand1: #9c6cff;
+      --brand1: #a56df5;
       --brand2: #d183f8;
     }
 
     body {
       margin: 0;
       font-family: "Pretendard", "Noto Sans KR", sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.75), transparent 28%),
-        linear-gradient(180deg, #f6f0fb 0%, #efe5f8 100%);
+      background: var(--bg);
       color: var(--ink);
     }
 
@@ -68,28 +67,11 @@
         0 12px 30px rgba(124, 77, 255, 0.08),
         0 4px 12px rgba(0,0,0,0.04);
       cursor: pointer;
-      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      transition: all 0.25s ease;
       text-align: center;
       position: relative;
       backdrop-filter: blur(3px);
-      overflow: hidden;
-      isolation: isolate;
     }
-
-    .choice-card::before{
-      content:"";
-      position:absolute;
-      inset:-30% auto auto -20%;
-      width:140px;
-      height:140px;
-      background: radial-gradient(circle, rgba(255,255,255,0.85), rgba(255,255,255,0));
-      opacity:.7;
-      pointer-events:none;
-      transform: rotate(-12deg);
-      z-index:0;
-    }
-
-    .choice-card > * { position: relative; z-index: 1; }
 
     .choice-card:hover {
       transform: translateY(-6px) scale(1.015);
@@ -101,17 +83,11 @@
 
     .choice-card.selected {
       border-color: var(--line-strong);
-      background: linear-gradient(180deg, #fdfbff 0%, #f6f0ff 100%);
+      background: #faf7ff;
       box-shadow:
-        0 16px 35px rgba(132, 94, 194, 0.22),
-        0 0 0 5px rgba(156, 108, 255, 0.08);
-      animation: selectedPop .5s ease;
-    }
-
-    @keyframes selectedPop {
-      0% { transform: scale(1); }
-      45% { transform: scale(1.045); }
-      100% { transform: scale(1); }
+        0 10px 26px rgba(132, 94, 194, 0.16),
+        0 0 0 4px rgba(178, 140, 255, 0.10);
+      animation: selectedBounce 0.45s ease;
     }
 
     .image-frame{
@@ -119,96 +95,62 @@
       aspect-ratio: 1 / 1;
       border-radius: 22px;
       background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95), rgba(255,255,255,0) 34%),
-        linear-gradient(180deg, #fcfbff 0%, #f0e6ff 100%);
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 18%, rgba(244,236,255,0.9) 52%, rgba(236,224,255,0.95) 100%);
       border: 1px solid #e6dbf7;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 8px;
+      padding: 10px;
       overflow: hidden;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.95),
+        inset 0 -12px 24px rgba(179, 149, 226, 0.08);
       position: relative;
     }
 
-    .image-frame::after{
+    .image-frame::before{
       content:"";
       position:absolute;
-      width:78%;
-      height:78%;
-      border-radius:50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.48), rgba(221,201,255,0.12) 58%, rgba(255,255,255,0) 70%);
-      filter: blur(2px);
-      animation: auraPulse 2.6s ease-in-out infinite;
+      inset:10px;
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.48), rgba(255,255,255,0));
       pointer-events:none;
     }
 
-    @keyframes auraPulse{
-      0%,100%{ transform: scale(.92); opacity:.55; }
-      50%{ transform: scale(1.08); opacity:.95; }
+    .choice-card img {
+      width: auto;
+      height: auto;
+      max-width: 68%;
+      max-height: 68%;
+      object-fit: contain;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.72);
+      padding: 6px;
+      image-rendering: auto;
+      filter:
+        saturate(1.08)
+        brightness(1.03)
+        drop-shadow(0 8px 16px rgba(98, 77, 142, 0.12));
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      animation: iconFloat 3.6s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
     }
 
-    .icon-stage {
-      width: 100%;
-      height: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      z-index:1;
-      animation: iconFloat 2.4s ease-in-out infinite;
-      transform-origin:center center;
-      will-change: transform;
+    .choice-card:nth-child(2n) img { animation-delay: .35s; }
+    .choice-card:nth-child(3n) img { animation-delay: .8s; }
+    .choice-card:nth-child(4n) img { animation-delay: 1.15s; }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.04); }
     }
 
-    .choice-card:nth-child(2n) .icon-stage { animation-duration: 2.9s; }
-    .choice-card:nth-child(3n) .icon-stage { animation-duration: 2.2s; }
-    .choice-card:nth-child(4n) .icon-stage { animation-duration: 3.1s; }
-
-    .choice-card:hover .icon-stage{
-      animation-name: iconAction;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-    }
-
-    .choice-card.selected .icon-stage{
-      animation-name: iconActionStrong;
-      animation-duration: .8s;
-      animation-iteration-count: infinite;
-    }
-
-    @keyframes iconFloat{
-      0%{ transform: translateY(0) rotate(0deg) scale(1); }
-      25%{ transform: translateY(-5px) rotate(-2deg) scale(1.02); }
-      50%{ transform: translateY(-10px) rotate(2deg) scale(1.03); }
-      75%{ transform: translateY(-4px) rotate(-1deg) scale(1.01); }
-      100%{ transform: translateY(0) rotate(0deg) scale(1); }
-    }
-
-    @keyframes iconAction{
-      0%{ transform: translateY(0) rotate(0deg) scale(1); }
-      18%{ transform: translateY(-10px) rotate(-6deg) scale(1.05); }
-      36%{ transform: translateY(-2px) rotate(6deg) scale(1.08); }
-      58%{ transform: translateY(-13px) rotate(-5deg) scale(1.04); }
-      78%{ transform: translateY(-4px) rotate(4deg) scale(1.08); }
-      100%{ transform: translateY(0) rotate(0deg) scale(1); }
-    }
-
-    @keyframes iconActionStrong{
-      0%{ transform: translateY(0) rotate(0deg) scale(1); }
-      15%{ transform: translateY(-12px) rotate(-8deg) scale(1.08); }
-      30%{ transform: translateY(-3px) rotate(8deg) scale(1.13); }
-      50%{ transform: translateY(-15px) rotate(-7deg) scale(1.08); }
-      70%{ transform: translateY(-4px) rotate(7deg) scale(1.12); }
-      85%{ transform: translateY(-10px) rotate(-4deg) scale(1.06); }
-      100%{ transform: translateY(0) rotate(0deg) scale(1); }
-    }
-
-    .icon-svg{
-      width: 86%;
-      height: 86%;
-      display:block;
-      filter: drop-shadow(0 12px 18px rgba(95,64,152,.16));
+    @keyframes selectedBounce {
+      0% { transform: scale(0.96); }
+      55% { transform: scale(1.03); }
+      100% { transform: scale(1); }
     }
 
     .choice-title {
@@ -337,19 +279,20 @@
       padding: 8px 14px 8px 8px;
     }
 
-    .picked-chip .chip-icon {
+    .picked-chip img {
       width: 44px;
       height: 44px;
+      object-fit: contain;
       border-radius: 50%;
       background: white;
       padding: 4px;
       border: 1px solid #eadff7;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      filter:
+        contrast(1.12)
+        saturate(1.05)
+        drop-shadow(0 0 0.65px rgba(20,15,34,0.98))
+        drop-shadow(0 0 0.65px rgba(20,15,34,0.98));
     }
-
-    .picked-chip svg { width:100%; height:100%; }
 
     .picked-chip span {
       font-size: 14px;
@@ -462,17 +405,62 @@
     }
 
     @media (max-width: 560px) {
-      .wrap { padding: 24px 14px 60px; }
-      .page-title { font-size: 26px; line-height: 1.35; }
-      .page-sub { font-size: 14px; line-height: 1.55; margin-bottom: 24px; }
-      .choice-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
-      .choice-card { border-radius: 22px; padding: 14px 10px 16px; }
-      .image-frame { border-radius: 18px; padding: 8px; }
-      .choice-title { font-size: 18px; margin-top: 10px; }
-      .choice-desc { font-size: 13px; min-height: 38px; }
-      .modal { padding: 22px 16px 18px; border-radius: 24px; }
+      .wrap {
+        padding: 24px 14px 60px;
+      }
+
+      .page-title {
+        font-size: 26px;
+        line-height: 1.35;
+      }
+
+      .page-sub {
+        font-size: 14px;
+        line-height: 1.55;
+        margin-bottom: 24px;
+      }
+
+      .choice-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .choice-card {
+        border-radius: 22px;
+        padding: 14px 10px 16px;
+      }
+
+      .image-frame {
+        border-radius: 18px;
+        padding: 8px;
+      }
+
+      .choice-card img {
+        max-width: 72%;
+        max-height: 72%;
+      }
+
+      .choice-title {
+        font-size: 18px;
+        margin-top: 10px;
+      }
+
+      .choice-desc {
+        font-size: 13px;
+        min-height: 38px;
+      }
+
+      .modal {
+        padding: 22px 16px 18px;
+        border-radius: 24px;
+      }
+
       .modal-title { font-size: 26px; }
-      .picked-chip { width: 100%; justify-content: flex-start; }
+
+      .picked-chip {
+        width: 100%;
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
@@ -482,98 +470,104 @@
     <p class="page-sub">그림 2~3개를 선택하면, 조합된 상징 이미지와 더 길어진 해설을 볼 수 있습니다.</p>
 
     <div class="choice-grid" id="choiceGrid">
-      <div class="choice-card" data-name="조용한 달" data-icon="moon" data-keywords="고요,사색,정리" data-mood="내면을 천천히 바라보는 힘" data-energy="조용하지만 깊은 집중력" data-message="마음을 가라앉히고 생각을 정리하게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <!-- 1행 -->
+      <div class="choice-card" data-name="조용한 달" data-keywords="고요,사색,정리" data-mood="내면을 천천히 바라보는 힘" data-energy="조용하지만 깊은 집중력" data-message="마음을 가라앉히고 생각을 정리하게 하는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f319.png" alt="조용한 달"></div>
         <div class="choice-title">조용한 달</div>
         <div class="choice-desc">혼자만의 정리와 사색의 기운</div>
       </div>
 
-      <div class="choice-card" data-name="별빛" data-icon="star" data-keywords="희망,회복,반짝임" data-mood="어둠 속에서도 길을 찾는 마음" data-energy="작지만 분명한 빛" data-message="희망과 기대를 놓지 않게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="별빛" data-keywords="희망,회복,반짝임" data-mood="어둠 속에서도 길을 찾는 마음" data-energy="작지만 분명한 빛" data-message="희망과 기대를 놓지 않게 하는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2b50.png" alt="별빛"></div>
         <div class="choice-title">별빛</div>
         <div class="choice-desc">희망과 회복을 비추는 기운</div>
       </div>
 
-      <div class="choice-card" data-name="불빛" data-icon="fire" data-keywords="열기,움직임,의지" data-mood="행동으로 옮기고 싶은 마음" data-energy="따뜻하고 전진하는 에너지" data-message="멈춰 있던 감정을 다시 움직이게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="불빛" data-keywords="열기,움직임,의지" data-mood="행동으로 옮기고 싶은 마음" data-energy="따뜻하고 전진하는 에너지" data-message="멈춰 있던 감정을 다시 움직이게 하는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f525.png" alt="불빛"></div>
         <div class="choice-title">불빛</div>
         <div class="choice-desc">에너지를 깨우는 전진의 기운</div>
       </div>
 
-      <div class="choice-card" data-name="구름" data-icon="cloud" data-keywords="흐름,변화,유연함" data-mood="흔들리면서도 흘러가는 마음" data-energy="부드럽고 이동하는 감정" data-message="고정되지 않고 변화 속에서 의미를 찾게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="구름" data-keywords="흐름,변화,유연함" data-mood="흔들리면서도 흘러가는 마음" data-energy="부드럽고 이동하는 감정" data-message="고정되지 않고 변화 속에서 의미를 찾게 하는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame">
+          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png" alt="구름" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/414/414825.png'">
+        </div>
         <div class="choice-title">구름</div>
         <div class="choice-desc">변화와 감정 흐름의 상징</div>
       </div>
 
-      <div class="choice-card" data-name="바다" data-icon="ocean" data-keywords="감정,깊이,수용" data-mood="마음속 깊은 층을 담아내는 힘" data-energy="넓고 포용적인 정서" data-message="겉보다 더 깊은 감정의 결을 들여다보게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <!-- 2행 -->
+      <div class="choice-card" data-name="바다" data-keywords="감정,깊이,수용" data-mood="마음속 깊은 층을 담아내는 힘" data-energy="넓고 포용적인 정서" data-message="겉보다 더 깊은 감정의 결을 들여다보게 하는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png" alt="바다" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f30a.png'"></div>
         <div class="choice-title">바다</div>
         <div class="choice-desc">깊고 넓은 감정의 에너지</div>
       </div>
 
-      <div class="choice-card" data-name="잎새" data-icon="leaf" data-keywords="회복,자람,순환" data-mood="조용히 다시 살아나는 기운" data-energy="부드럽게 커지는 생명력" data-message="회복과 성장의 가능성을 보여주는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="잎새" data-keywords="회복,자람,순환" data-mood="조용히 다시 살아나는 기운" data-energy="부드럽게 커지는 생명력" data-message="회복과 성장의 가능성을 보여주는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png" alt="잎새" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f342.png'"></div>
         <div class="choice-title">잎새</div>
         <div class="choice-desc">자라남과 회복의 상징</div>
       </div>
 
-      <div class="choice-card" data-name="꽃별" data-icon="flower" data-keywords="감성,아름다움,관계" data-mood="섬세하고 따뜻한 정서" data-energy="예민하지만 아름다운 빛" data-message="감성과 관계의 온기를 품는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="꽃별" data-keywords="감성,아름다움,관계" data-mood="섬세하고 따뜻한 정서" data-energy="예민하지만 아름다운 빛" data-message="감성과 관계의 온기를 품는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png" alt="꽃별" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png'"></div>
         <div class="choice-title">꽃별</div>
         <div class="choice-desc">감성과 따뜻함의 기운</div>
       </div>
 
-      <div class="choice-card" data-name="해" data-icon="sun" data-keywords="생기,명료함,중심" data-mood="마음을 밝게 드러내는 힘" data-energy="또렷하고 환한 기운" data-message="정체된 상태에서 중심을 다시 잡게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="해" data-keywords="생기,명료함,중심" data-mood="마음을 밝게 드러내는 힘" data-energy="또렷하고 환한 기운" data-message="정체된 상태에서 중심을 다시 잡게 하는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png" alt="해" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png'"></div>
         <div class="choice-title">해</div>
         <div class="choice-desc">밝음과 중심의 에너지</div>
       </div>
 
-      <div class="choice-card" data-name="고양이" data-icon="cat" data-keywords="직감,관찰,독립" data-mood="조용히 살피며 자기 리듬을 지키는 마음" data-energy="예민하지만 유연한 집중력" data-message="혼자만의 감각으로 세상을 읽어내는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <!-- 3행: 동물 -->
+      <div class="choice-card" data-name="고양이" data-keywords="직감,관찰,독립" data-mood="조용히 살피며 자기 리듬을 지키는 마음" data-energy="예민하지만 유연한 집중력" data-message="혼자만의 감각으로 세상을 읽어내는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png" alt="고양이" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png'"></div>
         <div class="choice-title">고양이</div>
         <div class="choice-desc">직감과 관찰의 동물</div>
       </div>
 
-      <div class="choice-card" data-name="강아지" data-icon="dog" data-keywords="친밀,충성,따뜻함" data-mood="가까이 다가가 마음을 나누는 힘" data-energy="부드럽고 정직한 온기" data-message="관계 속에서 안정과 애정을 만드는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="강아지" data-keywords="친밀,충성,따뜻함" data-mood="가까이 다가가 마음을 나누는 힘" data-energy="부드럽고 정직한 온기" data-message="관계 속에서 안정과 애정을 만드는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f436.png" alt="강아지" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f436.png'"></div>
         <div class="choice-title">강아지</div>
         <div class="choice-desc">관계와 애정의 동물</div>
       </div>
 
-      <div class="choice-card" data-name="여우" data-icon="fox" data-keywords="재치,민감함,판단" data-mood="빠르게 흐름을 읽고 움직이는 감각" data-energy="날렵하고 선명한 눈치" data-message="상황을 파악하고 방향을 바꾸는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="여우" data-keywords="재치,민감함,판단" data-mood="빠르게 흐름을 읽고 움직이는 감각" data-energy="날렵하고 선명한 눈치" data-message="상황을 파악하고 방향을 바꾸는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98a.png" alt="여우" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98a.png'"></div>
         <div class="choice-title">여우</div>
         <div class="choice-desc">재치와 판단의 동물</div>
       </div>
 
-      <div class="choice-card" data-name="사슴" data-icon="deer" data-keywords="섬세,경계,순수" data-mood="조용히 주변을 느끼는 감각" data-energy="부드럽고 조심스러운 생명력" data-message="예민하지만 맑은 마음을 지키는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="사슴" data-keywords="섬세,경계,순수" data-mood="조용히 주변을 느끼는 감각" data-energy="부드럽고 조심스러운 생명력" data-message="예민하지만 맑은 마음을 지키는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98c.png" alt="사슴" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98c.png'"></div>
         <div class="choice-title">사슴</div>
         <div class="choice-desc">섬세함과 순수의 동물</div>
       </div>
 
-      <div class="choice-card" data-name="나비" data-icon="butterfly" data-keywords="변화,가벼움,개화" data-mood="새로운 단계로 옮겨가는 기운" data-energy="가볍고 아름답게 퍼지는 변화" data-message="낡은 상태를 벗고 새 흐름으로 넘어가는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <!-- 4행 -->
+      <div class="choice-card" data-name="나비" data-keywords="변화,가벼움,개화" data-mood="새로운 단계로 옮겨가는 기운" data-energy="가볍고 아름답게 퍼지는 변화" data-message="낡은 상태를 벗고 새 흐름으로 넘어가는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png" alt="나비" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png'"></div>
         <div class="choice-title">나비</div>
         <div class="choice-desc">변화와 개화의 동물</div>
       </div>
 
-      <div class="choice-card" data-name="새" data-icon="bird" data-keywords="자유,소식,상승" data-mood="막혀 있던 마음을 열고 올라가는 힘" data-energy="가볍고 시원한 확장성" data-message="시야를 넓히고 멀리 바라보게 하는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="새" data-keywords="자유,소식,상승" data-mood="막혀 있던 마음을 열고 올라가는 힘" data-energy="가볍고 시원한 확장성" data-message="시야를 넓히고 멀리 바라보게 하는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f426.png" alt="새" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f426.png'"></div>
         <div class="choice-title">새</div>
         <div class="choice-desc">자유와 시야의 동물</div>
       </div>
 
-      <div class="choice-card" data-name="토끼" data-icon="rabbit" data-keywords="민감,순간반응,부드러움" data-mood="작은 기척에도 반응하는 섬세함" data-energy="조용하지만 빠른 감정의 움직임" data-message="예민한 감각과 순한 마음이 함께 있는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="토끼" data-keywords="민감,순간반응,부드러움" data-mood="작은 기척에도 반응하는 섬세함" data-energy="조용하지만 빠른 감정의 움직임" data-message="예민한 감각과 순한 마음이 함께 있는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f407.png" alt="토끼" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f407.png'"></div>
         <div class="choice-title">토끼</div>
         <div class="choice-desc">민감함과 부드러움의 동물</div>
       </div>
 
-      <div class="choice-card" data-name="곰" data-icon="bear" data-keywords="안정,보호,묵직함" data-mood="쉽게 흔들리지 않는 중심감" data-energy="느리지만 든든한 힘" data-message="스스로와 주변을 지켜주는 상징" onclick="toggleChoice(this)">
-        <div class="image-frame"><div class="icon-stage"></div></div>
+      <div class="choice-card" data-name="곰" data-keywords="안정,보호,묵직함" data-mood="쉽게 흔들리지 않는 중심감" data-energy="느리지만 든든한 힘" data-message="스스로와 주변을 지켜주는 상징" onclick="toggleChoice(this)">
+        <div class="image-frame"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43b.png" alt="곰" onerror="this.src='https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43b.png'"></div>
         <div class="choice-title">곰</div>
         <div class="choice-desc">안정과 보호의 동물</div>
       </div>
@@ -637,35 +631,92 @@
     let lastFusionImage = "";
 
     const denseComboMap = {
-      "고양이|조용한 달": { title: "달빛 고양이형", short: "고요한 직감과 혼자만의 감각이 살아 있는 조합", paragraphs: ["이 조합은 겉으로 조용해 보이지만 안쪽에서는 끊임없이 감각이 움직이는 상태를 보여줍니다. 조용한 달의 사색성과 고양이의 관찰력이 만나, 쉽게 드러내지 않지만 주변의 분위기를 아주 예민하게 읽어내는 흐름이 만들어집니다.", "지금의 마음은 누군가와 크게 부딪치기보다 한 발 물러나 자신의 리듬을 지키고 싶어 하는 쪽에 가깝습니다. 다만 이 고요함은 단순한 멈춤이 아니라, 스스로를 보호하면서 다음 움직임을 준비하는 집중의 시간일 가능성이 큽니다.", "이 조합을 가진 사람은 혼자 있는 시간 속에서 오히려 더 또렷해지고, 말보다 느낌으로 많은 것을 파악하는 힘이 있습니다. 대신 감정을 바로 드러내지 않아 오해를 받을 수 있으니, 필요할 때는 마음의 문을 조금 열어주는 것이 좋습니다."] },
-      "강아지|해": { title: "햇살 강아지형", short: "따뜻한 관계와 밝은 생기가 동시에 살아 있는 조합", paragraphs: ["이 조합은 사람을 향해 열려 있는 마음과 환한 중심 에너지가 같이 흐르는 상태를 보여줍니다. 해의 생동감과 강아지의 친밀함이 만나, 관계 속에서 힘을 얻고 또 주변을 밝게 만드는 기운이 강하게 드러납니다.", "지금의 마음은 누군가와 연결되고 싶어 하며, 혼자 견디기보다 따뜻한 교류 안에서 안정감을 회복하려는 방향에 가깝습니다. 그래서 작은 관심, 대화, 일상의 교감이 예상보다 큰 힘이 되어줄 수 있습니다.", "이 조합은 기본적으로 정직하고 맑은 장점을 지니지만, 상대에게 마음을 많이 쓰는 만큼 기분의 영향을 받기 쉽기도 합니다. 주변과 잘 어울리되, 자신의 에너지까지 함께 지키는 균형을 의식하면 더 좋은 흐름으로 이어질 수 있습니다."] },
-      "여우|불빛": { title: "불빛 여우형", short: "재치 있는 판단과 빠른 추진이 살아 있는 조합", paragraphs: ["이 조합은 상황을 빠르게 읽어내는 센스와 행동으로 옮기려는 열기가 동시에 살아 있는 상태입니다. 불빛의 전진성과 여우의 민감한 판단력이 만나, 지금의 마음이 가만히 있기보다 변화의 틈을 찾아 움직이려는 흐름으로 보입니다.", "당신은 단순히 에너지만 많은 것이 아니라, 어디로 움직여야 손해가 적고 효과가 클지 감으로 파악하는 편일 가능성이 큽니다. 그래서 순간 판단이나 전환 속도에서 강점을 보일 수 있습니다.", "다만 이 조합은 너무 빨리 결론을 내리거나, 영리하게 버티다가 마음의 피로를 놓칠 수 있다는 점을 함께 가집니다. 속도와 직감이 강할수록 한 번쯤 멈추어 자기 감정을 확인하는 시간이 필요합니다."] },
-      "사슴|꽃별": { title: "꽃사슴 감성형", short: "섬세함과 따뜻한 감수성이 맑게 살아 있는 조합", paragraphs: ["이 조합은 예민하지만 아름다운 감각을 품고 있는 마음의 상태를 보여줍니다. 사슴의 조심스러운 순수성과 꽃별의 따뜻한 감성이 만나, 지금의 마음은 상처받기 쉬운 대신 아주 깊게 느끼고 오래 기억하는 흐름으로 볼 수 있습니다.", "당신은 작은 표정, 말투, 분위기 변화도 민감하게 알아차릴 수 있으며, 그만큼 관계 속의 온기나 미묘한 아름다움에도 크게 반응하는 편일 수 있습니다. 이 점은 감수성이라는 선물이지만 동시에 피로의 원인이 되기도 합니다.", "그래서 이 조합은 강해지기보다 자기 감각을 잘 보호하는 것이 중요합니다. 무리해서 단단해지려 하기보다, 자신을 편안하게 해주는 사람과 공간을 가까이 두는 것이 지금의 흐름에 더 잘 맞습니다."] },
-      "나비|꽃별": { title: "꽃피는 나비형", short: "변화와 개화가 함께 일어나는 감성 조합", paragraphs: ["이 조합은 낡은 감정을 벗고 새로운 분위기로 넘어가려는 흐름을 보여줍니다. 나비의 변화성과 꽃별의 개화 감성이 만나, 지금의 마음은 아직 완전히 안정된 상태라기보다 아름답게 바뀌어가는 과정에 놓여 있다고 볼 수 있습니다.", "예전에는 중요하게 느껴지던 감정이 조금씩 옅어지고, 대신 새로운 취향이나 새로운 관계, 새로운 시선이 마음 안으로 들어오고 있을 가능성이 큽니다. 그래서 흔들림처럼 느껴지는 부분도 사실은 성장의 신호일 수 있습니다.", "이 조합은 가볍고 예쁜 흐름만 있는 것이 아니라, 변화 과정 특유의 불안정함도 함께 지닙니다. 조급하게 완성을 바라기보다 지금 피어나고 있는 감정 하나하나를 천천히 받아들이는 것이 좋습니다."] },
-      "새|별빛": { title: "별을 쫓는 새형", short: "멀리 보고 싶어 하는 시야와 희망의 조합", paragraphs: ["이 조합은 더 넓은 곳을 바라보고 싶은 마음과 앞으로의 가능성을 놓지 않는 희망의 흐름이 만나 만들어집니다. 새의 확장감과 별빛의 반짝임이 합쳐져, 지금의 마음은 답답한 현실보다 조금 더 먼 방향을 꿈꾸고 있는 상태에 가깝습니다.", "당신은 지금 익숙한 자리에 머무르기보다 새로운 공기와 새로운 관점을 원할 가능성이 큽니다. 그래서 여행, 이동, 새로운 계획, 다른 방식의 삶에 대한 생각이 자연스럽게 떠오를 수 있습니다.", "다만 멀리를 바라보는 힘이 큰 만큼 현재의 발밑이 흐려질 수도 있습니다. 꿈과 가능성을 품되, 오늘 당장 할 수 있는 작은 행동 하나를 함께 붙잡을 때 이 조합은 가장 건강하게 빛납니다."] },
-      "토끼|조용한 달": { title: "달토끼 감성형", short: "민감함과 고요한 사색이 섬세하게 이어진 조합", paragraphs: ["이 조합은 아주 작은 기척에도 반응하는 마음과, 그 감정을 조용히 안쪽으로 데려가 바라보는 흐름이 함께 살아 있는 상태입니다. 토끼의 예민함과 조용한 달의 사색성이 만나, 지금의 마음은 겉보다 안쪽에서 훨씬 더 많은 일이 일어나는 모습에 가깝습니다.", "당신은 사람들의 말보다 분위기에 먼저 반응할 수 있고, 눈에 보이는 상황보다 미묘한 정서를 깊이 받아들이는 편일 수 있습니다. 그래서 쉬운 환경에서는 누구보다 부드럽고 따뜻하지만, 낯선 긴장 속에서는 쉽게 지칠 가능성도 있습니다.", "이 조합은 약함이 아니라 섬세한 감각의 형태입니다. 스스로를 너무 예민하다고 탓하기보다, 무엇이 나를 편안하게 해주는지 알아가는 것이 더 중요한 시기일 수 있습니다."] },
-      "곰|바다": { title: "깊은 곰 파도형", short: "묵직한 안정감과 깊은 감정 수용이 만난 조합", paragraphs: ["이 조합은 쉽게 흔들리지 않는 중심감과 넓게 품어내는 감정의 깊이가 함께 흐르는 상태입니다. 곰의 든든함과 바다의 수용성이 만나, 지금의 마음은 단단하게 버티면서도 속으로는 많은 감정을 조용히 품고 있는 모습에 가깝습니다.", "당신은 겉으로는 무덤덤해 보일 수 있지만, 실제로는 주변의 분위기와 사람들의 무게까지 함께 안고 가는 편일 가능성이 큽니다. 그래서 위로를 주는 사람처럼 보이면서도 정작 본인은 피로를 늦게 알아차릴 수 있습니다.", "이 조합의 강점은 믿음직함과 깊이입니다. 다만 너무 오래 혼자 짊어지면 바다처럼 넘칠 수 있으므로, 자기 마음을 꺼내 놓을 수 있는 안전한 시간과 사람이 필요합니다."] }
+      "고양이|조용한 달": {
+        title: "달빛 고양이형",
+        short: "고요한 직감과 혼자만의 감각이 살아 있는 조합",
+        paragraphs: [
+          "이 조합은 겉으로 조용해 보이지만 안쪽에서는 끊임없이 감각이 움직이는 상태를 보여줍니다. 조용한 달의 사색성과 고양이의 관찰력이 만나, 쉽게 드러내지 않지만 주변의 분위기를 아주 예민하게 읽어내는 흐름이 만들어집니다.",
+          "지금의 마음은 누군가와 크게 부딪치기보다 한 발 물러나 자신의 리듬을 지키고 싶어 하는 쪽에 가깝습니다. 다만 이 고요함은 단순한 멈춤이 아니라, 스스로를 보호하면서 다음 움직임을 준비하는 집중의 시간일 가능성이 큽니다.",
+          "이 조합을 가진 사람은 혼자 있는 시간 속에서 오히려 더 또렷해지고, 말보다 느낌으로 많은 것을 파악하는 힘이 있습니다. 대신 감정을 바로 드러내지 않아 오해를 받을 수 있으니, 필요할 때는 마음의 문을 조금 열어주는 것이 좋습니다."
+        ]
+      },
+      "강아지|해": {
+        title: "햇살 강아지형",
+        short: "따뜻한 관계와 밝은 생기가 동시에 살아 있는 조합",
+        paragraphs: [
+          "이 조합은 사람을 향해 열려 있는 마음과 환한 중심 에너지가 같이 흐르는 상태를 보여줍니다. 해의 생동감과 강아지의 친밀함이 만나, 관계 속에서 힘을 얻고 또 주변을 밝게 만드는 기운이 강하게 드러납니다.",
+          "지금의 마음은 누군가와 연결되고 싶어 하며, 혼자 견디기보다 따뜻한 교류 안에서 안정감을 회복하려는 방향에 가깝습니다. 그래서 작은 관심, 대화, 일상의 교감이 예상보다 큰 힘이 되어줄 수 있습니다.",
+          "이 조합은 기본적으로 정직하고 맑은 장점을 지니지만, 상대에게 마음을 많이 쓰는 만큼 기분의 영향을 받기 쉽기도 합니다. 주변과 잘 어울리되, 자신의 에너지까지 함께 지키는 균형을 의식하면 더 좋은 흐름으로 이어질 수 있습니다."
+        ]
+      },
+      "여우|불빛": {
+        title: "불빛 여우형",
+        short: "재치 있는 판단과 빠른 추진이 살아 있는 조합",
+        paragraphs: [
+          "이 조합은 상황을 빠르게 읽어내는 센스와 행동으로 옮기려는 열기가 동시에 살아 있는 상태입니다. 불빛의 전진성과 여우의 민감한 판단력이 만나, 지금의 마음이 가만히 있기보다 변화의 틈을 찾아 움직이려는 흐름으로 보입니다.",
+          "당신은 단순히 에너지만 많은 것이 아니라, 어디로 움직여야 손해가 적고 효과가 클지 감으로 파악하는 편일 가능성이 큽니다. 그래서 순간 판단이나 전환 속도에서 강점을 보일 수 있습니다.",
+          "다만 이 조합은 너무 빨리 결론을 내리거나, 영리하게 버티다가 마음의 피로를 놓칠 수 있다는 점을 함께 가집니다. 속도와 직감이 강할수록 한 번쯤 멈추어 자기 감정을 확인하는 시간이 필요합니다."
+        ]
+      },
+      "사슴|꽃별": {
+        title: "꽃사슴 감성형",
+        short: "섬세함과 따뜻한 감수성이 맑게 살아 있는 조합",
+        paragraphs: [
+          "이 조합은 예민하지만 아름다운 감각을 품고 있는 마음의 상태를 보여줍니다. 사슴의 조심스러운 순수성과 꽃별의 따뜻한 감성이 만나, 지금의 마음은 상처받기 쉬운 대신 아주 깊게 느끼고 오래 기억하는 흐름으로 볼 수 있습니다.",
+          "당신은 작은 표정, 말투, 분위기 변화도 민감하게 알아차릴 수 있으며, 그만큼 관계 속의 온기나 미묘한 아름다움에도 크게 반응하는 편일 수 있습니다. 이 점은 감수성이라는 선물이지만 동시에 피로의 원인이 되기도 합니다.",
+          "그래서 이 조합은 강해지기보다 자기 감각을 잘 보호하는 것이 중요합니다. 무리해서 단단해지려 하기보다, 자신을 편안하게 해주는 사람과 공간을 가까이 두는 것이 지금의 흐름에 더 잘 맞습니다."
+        ]
+      },
+      "나비|꽃별": {
+        title: "꽃피는 나비형",
+        short: "변화와 개화가 함께 일어나는 감성 조합",
+        paragraphs: [
+          "이 조합은 낡은 감정을 벗고 새로운 분위기로 넘어가려는 흐름을 보여줍니다. 나비의 변화성과 꽃별의 개화 감성이 만나, 지금의 마음은 아직 완전히 안정된 상태라기보다 아름답게 바뀌어가는 과정에 놓여 있다고 볼 수 있습니다.",
+          "예전에는 중요하게 느껴지던 감정이 조금씩 옅어지고, 대신 새로운 취향이나 새로운 관계, 새로운 시선이 마음 안으로 들어오고 있을 가능성이 큽니다. 그래서 흔들림처럼 느껴지는 부분도 사실은 성장의 신호일 수 있습니다.",
+          "이 조합은 가볍고 예쁜 흐름만 있는 것이 아니라, 변화 과정 특유의 불안정함도 함께 지닙니다. 조급하게 완성을 바라기보다 지금 피어나고 있는 감정 하나하나를 천천히 받아들이는 것이 좋습니다."
+        ]
+      },
+      "새|별빛": {
+        title: "별을 쫓는 새형",
+        short: "멀리 보고 싶어 하는 시야와 희망의 조합",
+        paragraphs: [
+          "이 조합은 더 넓은 곳을 바라보고 싶은 마음과 앞으로의 가능성을 놓지 않는 희망의 흐름이 만나 만들어집니다. 새의 확장감과 별빛의 반짝임이 합쳐져, 지금의 마음은 답답한 현실보다 조금 더 먼 방향을 꿈꾸고 있는 상태에 가깝습니다.",
+          "당신은 지금 익숙한 자리에 머무르기보다 새로운 공기와 새로운 관점을 원할 가능성이 큽니다. 그래서 여행, 이동, 새로운 계획, 다른 방식의 삶에 대한 생각이 자연스럽게 떠오를 수 있습니다.",
+          "다만 멀리를 바라보는 힘이 큰 만큼 현재의 발밑이 흐려질 수도 있습니다. 꿈과 가능성을 품되, 오늘 당장 할 수 있는 작은 행동 하나를 함께 붙잡을 때 이 조합은 가장 건강하게 빛납니다."
+        ]
+      },
+      "토끼|조용한 달": {
+        title: "달토끼 감성형",
+        short: "민감함과 고요한 사색이 섬세하게 이어진 조합",
+        paragraphs: [
+          "이 조합은 아주 작은 기척에도 반응하는 마음과, 그 감정을 조용히 안쪽으로 데려가 바라보는 흐름이 함께 살아 있는 상태입니다. 토끼의 예민함과 조용한 달의 사색성이 만나, 지금의 마음은 겉보다 안쪽에서 훨씬 더 많은 일이 일어나는 모습에 가깝습니다.",
+          "당신은 사람들의 말보다 분위기에 먼저 반응할 수 있고, 눈에 보이는 상황보다 미묘한 정서를 깊이 받아들이는 편일 수 있습니다. 그래서 쉬운 환경에서는 누구보다 부드럽고 따뜻하지만, 낯선 긴장 속에서는 쉽게 지칠 가능성도 있습니다.",
+          "이 조합은 약함이 아니라 섬세한 감각의 형태입니다. 스스로를 너무 예민하다고 탓하기보다, 무엇이 나를 편안하게 해주는지 알아가는 것이 더 중요한 시기일 수 있습니다."
+        ]
+      },
+      "곰|바다": {
+        title: "깊은 곰 파도형",
+        short: "묵직한 안정감과 깊은 감정 수용이 만난 조합",
+        paragraphs: [
+          "이 조합은 쉽게 흔들리지 않는 중심감과 넓게 품어내는 감정의 깊이가 함께 흐르는 상태입니다. 곰의 든든함과 바다의 수용성이 만나, 지금의 마음은 단단하게 버티면서도 속으로는 많은 감정을 조용히 품고 있는 모습에 가깝습니다.",
+          "당신은 겉으로는 무덤덤해 보일 수 있지만, 실제로는 주변의 분위기와 사람들의 무게까지 함께 안고 가는 편일 가능성이 큽니다. 그래서 위로를 주는 사람처럼 보이면서도 정작 본인은 피로를 늦게 알아차릴 수 있습니다.",
+          "이 조합의 강점은 믿음직함과 깊이입니다. 다만 너무 오래 혼자 짊어지면 바다처럼 넘칠 수 있으므로, 자기 마음을 꺼내 놓을 수 있는 안전한 시간과 사람이 필요합니다."
+        ]
+      }
     };
 
     initKakao();
-    renderAllIcons();
 
     function initKakao() {
       try {
         if (window.Kakao && KAKAO_JS_KEY && KAKAO_JS_KEY !== "여기에_카카오_자바스크립트_키_입력") {
-          if (!Kakao.isInitialized()) Kakao.init(KAKAO_JS_KEY);
+          if (!Kakao.isInitialized()) {
+            Kakao.init(KAKAO_JS_KEY);
+          }
         }
       } catch (e) {
         console.log("Kakao init error:", e);
       }
-    }
-
-    function renderAllIcons() {
-      document.querySelectorAll(".choice-card").forEach((card, idx) => {
-        const icon = card.dataset.icon;
-        const stage = card.querySelector(".icon-stage");
-        stage.innerHTML = getIconSVG(icon, { size: 168, uid: `card${idx}` });
-      });
     }
 
     function toggleChoice(card) {
@@ -712,25 +763,24 @@
     function renderPickedImages(cards) {
       const wrap = document.getElementById("pickedImages");
       wrap.innerHTML = "";
-      cards.forEach((card, idx) => {
+      cards.forEach(card => {
+        const img = card.querySelector("img").src;
         const name = card.dataset.name || "";
-        const icon = card.dataset.icon || "";
         const chip = document.createElement("div");
         chip.className = "picked-chip";
-        chip.innerHTML = `<div class="chip-icon">${getIconSVG(icon, { size: 44, uid: `chip${idx}`, still: true })}</div><span>${name}</span>`;
+        chip.innerHTML = `<img src="${img}" alt="${name}"><span>${name}</span>`;
         wrap.appendChild(chip);
       });
     }
 
     async function buildFusionResult(cards) {
-      const items = cards.map((card, idx) => ({
+      const items = cards.map(card => ({
         name: card.dataset.name || "",
-        icon: card.dataset.icon || "",
         keywords: (card.dataset.keywords || "").split(",").map(v => v.trim()).filter(Boolean),
         mood: card.dataset.mood || "",
         energy: card.dataset.energy || "",
         message: card.dataset.message || "",
-        img: svgToDataUrl(getIconSVG(card.dataset.icon || "", { size: 220, uid: `fusionItem${idx}`, still: true }))
+        img: card.querySelector("img").src
       }));
 
       const fusionDataUrl = await createFusionImage(items);
@@ -755,6 +805,7 @@
     function makeFusionName(items) {
       const names = items.map(item => item.name);
       const sortedKey = [...names].sort().join("|");
+
       const specialMap = {
         "별빛|조용한 달": "조용한 달·별빛 조합형",
         "불빛|조용한 달": "조용한 달·불빛 조합형",
@@ -777,8 +828,11 @@
         "나비|꽃별|해": "개화하는 햇살형",
         "곰|바다|구름": "깊고 느린 파도형"
       };
+
       if (specialMap[sortedKey]) return specialMap[sortedKey];
-      return items.length === 2 ? `${names[0]}·${names[1]} 조합형` : `${names[0]}·${names[1]}·${names[2]} 통합형`;
+      return items.length === 2
+        ? `${names[0]}·${names[1]} 조합형`
+        : `${names[0]}·${names[1]}·${names[2]} 통합형`;
     }
 
     function makeFusionDesc(items) {
@@ -919,10 +973,15 @@
     }
 
     function loadImage(item) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.onload = () => resolve(img);
-        img.onerror = reject;
+        img.onerror = () => {
+          const fallback = new Image();
+          fallback.onload = () => resolve(fallback);
+          fallback.src = item.img;
+        };
         img.src = item.img;
       });
     }
@@ -952,22 +1011,41 @@
       const plainText = `${lastFusionName}\n\n${lastExplainText.replace(/<[^>]*>/g, "")}\n\n${location.href}`;
 
       try {
-        if (window.Kakao && typeof Kakao.isInitialized === "function" && Kakao.isInitialized()) {
+        if (
+          window.Kakao &&
+          typeof Kakao.isInitialized === "function" &&
+          Kakao.isInitialized()
+        ) {
           Kakao.Share.sendDefault({
             objectType: "feed",
             content: {
               title: lastFusionName,
               description: makeShareDescription(lastExplainText),
-              imageUrl: lastFusionImage || svgToDataUrl(getIconSVG("star", { size: 120, uid: "shareFallback", still: true })),
-              link: { mobileWebUrl: location.href, webUrl: location.href }
+              imageUrl: lastFusionImage || "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2728.png",
+              link: {
+                mobileWebUrl: location.href,
+                webUrl: location.href
+              }
             },
-            buttons: [{ title: "테스트 보러가기", link: { mobileWebUrl: location.href, webUrl: location.href } }]
+            buttons: [
+              {
+                title: "테스트 보러가기",
+                link: {
+                  mobileWebUrl: location.href,
+                  webUrl: location.href
+                }
+              }
+            ]
           });
           return;
         }
 
         if (navigator.share) {
-          await navigator.share({ title: lastFusionName, text: plainText, url: location.href });
+          await navigator.share({
+            title: lastFusionName,
+            text: plainText,
+            url: location.href
+          });
           return;
         }
 
@@ -987,175 +1065,6 @@
     function makeShareDescription(text) {
       const cleaned = text.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
       return cleaned.length > 90 ? cleaned.slice(0, 90) + "..." : cleaned;
-    }
-
-    function svgToDataUrl(svg) {
-      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
-    }
-
-    function getIconSVG(type, opts = {}) {
-      const size = opts.size || 160;
-      const uid = opts.uid || ("u" + Math.random().toString(36).slice(2, 8));
-      const still = !!opts.still;
-      const motionFast = still ? "" : `
-        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -4; 0 0" dur="1.8s" repeatCount="indefinite"/>
-        <animateTransform attributeName="transform" additive="sum" type="rotate" values="0 50 50; -4 50 50; 4 50 50; 0 50 50" dur="1.8s" repeatCount="indefinite"/>`;
-      const sparkle = still ? "" : `
-        <g opacity=".9">
-          <circle cx="18" cy="18" r="2.1" fill="#fff7c7"><animate attributeName="opacity" values=".2;1;.2" dur="1.3s" repeatCount="indefinite"/></circle>
-          <circle cx="80" cy="16" r="1.8" fill="#fff"><animate attributeName="opacity" values="1;.2;1" dur="1.6s" repeatCount="indefinite"/></circle>
-          <circle cx="84" cy="78" r="2.2" fill="#fff"><animate attributeName="opacity" values=".3;1;.3" dur="1.4s" repeatCount="indefinite"/></circle>
-        </g>`;
-      const base = (inner, bg1 = "#fff8ff", bg2 = "#efe2ff") => `
-      <svg class="icon-svg" viewBox="0 0 100 100" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="g${uid}" cx="35%" cy="28%">
-            <stop offset="0%" stop-color="${bg1}"/>
-            <stop offset="100%" stop-color="${bg2}"/>
-          </radialGradient>
-          <filter id="s${uid}" x="-40%" y="-40%" width="180%" height="180%">
-            <feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="rgba(74,48,120,.18)"/>
-          </filter>
-        </defs>
-        <g filter="url(#s${uid})">
-          <circle cx="50" cy="50" r="37" fill="url(#g${uid})"/>
-        </g>
-        ${sparkle}
-        <g>${motionFast}${inner}</g>
-      </svg>`;
-      const stroke = '#4d3a72';
-
-      switch(type){
-        case "moon":
-          return base(`
-            <circle cx="45" cy="50" r="18" fill="#ffd65c" stroke="${stroke}" stroke-width="2.4"/>
-            <circle cx="55" cy="43" r="18" fill="url(#g${uid})"/>
-            <circle cx="32" cy="38" r="2.8" fill="#fff7c7"/>
-          `, "#fffaf2", "#f5e7ff");
-        case "star":
-          return base(`
-            <path d="M50 27 L56 41 L71 43 L60 53 L63 68 L50 60 L37 68 L40 53 L29 43 L44 41 Z" fill="#ffd45e" stroke="${stroke}" stroke-width="2.3" stroke-linejoin="round"/>
-          `, "#fffaf0", "#f3e7ff");
-        case "fire":
-          return base(`
-            <path d="M50 24 C60 35,65 42,63 52 C61 65,52 73,42 69 C31 65,28 54,32 46 C35 39,41 36,43 30 C44 35,46 38,49 41 C51 34,53 29,50 24 Z"
-                  fill="#ff8c48" stroke="${stroke}" stroke-width="2.4" stroke-linejoin="round"/>
-            <path d="M48 42 C53 47,55 52,53 57 C51 63,45 66,40 62 C35 59,34 52,37 48 C39 45,41 43,42 39 C44 42,45 44,48 42 Z"
-                  fill="#ffd46a"/>
-          `, "#fff6f0", "#f6e1ff");
-        case "cloud":
-          return base(`
-            <path d="M27 58 C21 58,18 53,18 49 C18 43,22 39,28 39 C30 31,37 26,45 28 C50 23,58 24,63 31 C71 30,78 35,78 43 C83 44,86 48,86 53 C86 59,81 63,75 63 H30 C29 63,28 63,27 63 Z"
-                  fill="#a7e7ff" stroke="${stroke}" stroke-width="2.3" stroke-linejoin="round"/>
-            <path d="M23 67 Q33 62 44 66 T66 66 T82 63" fill="none" stroke="#77cdef" stroke-width="3" stroke-linecap="round"/>
-          `, "#f5fcff", "#efe4ff");
-        case "ocean":
-          return base(`
-            <path d="M18 60 C24 50,34 46,44 48 C48 37,61 35,69 43 C78 44,84 53,82 62 C79 73,66 79,53 77 C39 77,24 72,18 60 Z"
-                  fill="#64c7ff" stroke="${stroke}" stroke-width="2.3"/>
-            <path d="M22 59 C28 54,35 52,42 55 C48 58,54 58,60 54 C66 50,72 50,78 54" fill="none" stroke="#dff8ff" stroke-width="3" stroke-linecap="round"/>
-          `, "#f3fbff", "#efe4ff");
-        case "leaf":
-          return base(`
-            <path d="M28 58 C27 38,43 26,66 28 C68 49,59 69,40 72 C31 70,28 64,28 58 Z"
-                  fill="#76db80" stroke="${stroke}" stroke-width="2.4"/>
-            <path d="M38 63 C45 53,52 46,61 36" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round"/>
-          `, "#f4fff2", "#efe4ff");
-        case "flower":
-          return base(`
-            <g fill="#ffb4d8" stroke="${stroke}" stroke-width="1.8">
-              <ellipse cx="50" cy="35" rx="10" ry="14"/>
-              <ellipse cx="64" cy="50" rx="10" ry="14"/>
-              <ellipse cx="50" cy="65" rx="10" ry="14"/>
-              <ellipse cx="36" cy="50" rx="10" ry="14"/>
-              <ellipse cx="40" cy="40" rx="9" ry="12" transform="rotate(-35 40 40)"/>
-              <ellipse cx="60" cy="40" rx="9" ry="12" transform="rotate(35 60 40)"/>
-            </g>
-            <circle cx="50" cy="50" r="8.5" fill="#ffd86b" stroke="${stroke}" stroke-width="2"/>
-          `, "#fff7fb", "#efe4ff");
-        case "sun":
-          return base(`
-            <g stroke="${stroke}" stroke-width="2.2" stroke-linecap="round">
-              <line x1="50" y1="16" x2="50" y2="26"/>
-              <line x1="50" y1="74" x2="50" y2="84"/>
-              <line x1="16" y1="50" x2="26" y2="50"/>
-              <line x1="74" y1="50" x2="84" y2="50"/>
-              <line x1="25" y1="25" x2="32" y2="32"/>
-              <line x1="68" y1="68" x2="75" y2="75"/>
-              <line x1="75" y1="25" x2="68" y2="32"/>
-              <line x1="32" y1="68" x2="25" y2="75"/>
-            </g>
-            <circle cx="50" cy="50" r="18" fill="#ffd55e" stroke="${stroke}" stroke-width="2.4"/>
-          `, "#fffaf0", "#f6e5ff");
-        case "cat":
-          return base(`
-            <path d="M34 39 L40 27 L48 38 H52 L60 27 L66 39 V59 C66 67,59 73,50 73 C41 73,34 67,34 59 Z"
-                  fill="#ffd36f" stroke="${stroke}" stroke-width="2.3" stroke-linejoin="round"/>
-            <circle cx="44" cy="52" r="2.5" fill="${stroke}"/>
-            <circle cx="56" cy="52" r="2.5" fill="${stroke}"/>
-            <path d="M46 60 Q50 63 54 60" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round"/>
-          `, "#fff7ef", "#f5e3ff");
-        case "dog":
-          return base(`
-            <path d="M35 35 C31 35,28 40,28 46 V58 C28 67,37 73,50 73 C63 73,72 67,72 58 V46 C72 40,69 35,65 35 L59 42 H41 Z"
-                  fill="#c98a59" stroke="${stroke}" stroke-width="2.3" stroke-linejoin="round"/>
-            <path d="M33 40 L24 32 L26 49" fill="#a46d47" stroke="${stroke}" stroke-width="2.2" stroke-linejoin="round"/>
-            <path d="M67 40 L76 32 L74 49" fill="#a46d47" stroke="${stroke}" stroke-width="2.2" stroke-linejoin="round"/>
-            <circle cx="44" cy="54" r="2.4" fill="${stroke}"/>
-            <circle cx="56" cy="54" r="2.4" fill="${stroke}"/>
-            <circle cx="50" cy="60" r="2.6" fill="${stroke}"/>
-          `, "#fff7ef", "#f3e2ff");
-        case "fox":
-          return base(`
-            <path d="M30 42 L40 26 L50 36 L60 26 L70 42 V58 C70 68,60 74,50 74 C40 74,30 68,30 58 Z"
-                  fill="#ff9c53" stroke="${stroke}" stroke-width="2.3" stroke-linejoin="round"/>
-            <path d="M38 61 Q50 70 62 61" fill="#fff4ef"/>
-            <circle cx="43.5" cy="52" r="2.3" fill="${stroke}"/>
-            <circle cx="56.5" cy="52" r="2.3" fill="${stroke}"/>
-          `, "#fff6ef", "#f4e3ff");
-        case "deer":
-          return base(`
-            <path d="M36 38 C36 32,39 29,42 29 C44 25,47 23,50 23 C53 23,56 25,58 29 C61 29,64 32,64 38 V58 C64 67,58 73,50 73 C42 73,36 67,36 58 Z"
-                  fill="#c89a6e" stroke="${stroke}" stroke-width="2.2"/>
-            <path d="M39 28 L34 20 M41 27 L39 17 M61 28 L66 20 M59 27 L61 17" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round"/>
-            <circle cx="45" cy="53" r="2.2" fill="${stroke}"/>
-            <circle cx="55" cy="53" r="2.2" fill="${stroke}"/>
-          `, "#fff8f2", "#f2e2ff");
-        case "butterfly":
-          return base(`
-            <ellipse cx="38" cy="44" rx="11" ry="15" fill="#7ec5ff" stroke="${stroke}" stroke-width="2.1" transform="rotate(-18 38 44)"/>
-            <ellipse cx="38" cy="60" rx="10" ry="13" fill="#8bddff" stroke="${stroke}" stroke-width="2.1" transform="rotate(10 38 60)"/>
-            <ellipse cx="62" cy="44" rx="11" ry="15" fill="#b39cff" stroke="${stroke}" stroke-width="2.1" transform="rotate(18 62 44)"/>
-            <ellipse cx="62" cy="60" rx="10" ry="13" fill="#d4a4ff" stroke="${stroke}" stroke-width="2.1" transform="rotate(-10 62 60)"/>
-            <path d="M50 36 V68" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
-          `, "#f7fbff", "#efe4ff");
-        case "bird":
-          return base(`
-            <path d="M29 54 C34 40,46 35,58 39 C64 36,72 39,74 45 C71 49,67 52,63 53 C61 62,53 70,43 70 C35 70,28 64,29 54 Z"
-                  fill="#ff7686" stroke="${stroke}" stroke-width="2.2"/>
-            <path d="M58 47 L71 43 L61 53" fill="#ffd56b" stroke="${stroke}" stroke-width="1.8" stroke-linejoin="round"/>
-            <circle cx="48" cy="50" r="2.1" fill="${stroke}"/>
-          `, "#fff7f9", "#f1e3ff");
-        case "rabbit":
-          return base(`
-            <path d="M40 28 C40 18,46 15,49 26 M56 28 C56 18,62 15,65 26" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round"/>
-            <ellipse cx="50" cy="52" rx="18" ry="20" fill="#dff1ff" stroke="${stroke}" stroke-width="2.3"/>
-            <circle cx="44" cy="52" r="2.2" fill="${stroke}"/>
-            <circle cx="56" cy="52" r="2.2" fill="${stroke}"/>
-            <path d="M47 60 Q50 63 53 60" fill="none" stroke="${stroke}" stroke-width="2"/>
-          `, "#f6fbff", "#efe3ff");
-        case "bear":
-          return base(`
-            <circle cx="39" cy="36" r="8" fill="#b98352" stroke="${stroke}" stroke-width="2"/>
-            <circle cx="61" cy="36" r="8" fill="#b98352" stroke="${stroke}" stroke-width="2"/>
-            <circle cx="50" cy="54" r="22" fill="#c78d58" stroke="${stroke}" stroke-width="2.3"/>
-            <circle cx="50" cy="60" r="9" fill="#f6dfc5" stroke="${stroke}" stroke-width="2"/>
-            <circle cx="43" cy="52" r="2.3" fill="${stroke}"/>
-            <circle cx="57" cy="52" r="2.3" fill="${stroke}"/>
-          `, "#fff8f1", "#f2e3ff");
-        default:
-          return base(`<circle cx="50" cy="50" r="18" fill="#d8b4fe" stroke="${stroke}" stroke-width="2.2"/>`);
-      }
     }
 
     window.addEventListener("click", function (e) {
